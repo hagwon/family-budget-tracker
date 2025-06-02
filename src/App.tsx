@@ -4,7 +4,6 @@ import { db } from './firebase'
 import { 
   collection, 
   addDoc, 
-  getDocs, 
   onSnapshot, 
   orderBy, 
   query 
@@ -47,7 +46,21 @@ function App() {
     return () => unsubscribe()
   }, [])
 
-  // 금액 포맷팅 함수
+  // 임시 테스트 함수
+  const testFirebaseConnection = async () => {
+    try {
+      console.log('Testing Firebase connection...')
+      const testDoc = await addDoc(collection(db, 'transactions'), {
+        test: 'connection test',
+        timestamp: new Date()
+      })
+      console.log('Test document written with ID: ', testDoc.id)
+      alert('Firebase 연결 성공!')
+    } catch (error) {
+      console.error('Firebase connection error: ', error)
+      alert('Firebase 연결 실패: ' + error)
+    }
+  }
   const formatNumber = (value: string) => {
     // 숫자만 추출
     const numbers = value.replace(/[^\d]/g, '')
@@ -62,37 +75,28 @@ function App() {
     setAmount(numbers)
     setDisplayAmount(formatNumber(numbers))
   }
-  const addTransaction = async () => {
+  const addTransaction = () => {
     if (!amount || !category || !description) {
       alert('모든 필드를 입력해주세요!')
       return
     }
-  
-    setLoading(true)
-  
-    try {
-      // Firebase에 새 거래 추가
-      await addDoc(collection(db, 'transactions'), {
-        amount: parseFloat(amount),
-        category,
-        description,
-        date: new Date().toISOString().split('T')[0],
-        type,
-        createdAt: new Date() // 생성 시간 추가 (정렬용)
-      })
-  
-      // 입력 필드 초기화
-      setAmount('')
-      setDisplayAmount('')
-      setCategory('')
-      setDescription('')
-      
-    } catch (error) {
-      console.error('거래 추가 중 오류 발생:', error)
-      alert('거래 추가 중 오류가 발생했습니다.')
-    } finally {
-      setLoading(false)
+
+    const newTransaction: Transaction = {
+      id: Date.now().toString(),
+      amount: parseFloat(amount),
+      category,
+      description,
+      date: new Date().toISOString().split('T')[0],
+      type
     }
+
+    setTransactions([newTransaction, ...transactions])
+    
+    // 입력 필드 초기화
+    setAmount('')
+    setDisplayAmount('')
+    setCategory('')
+    setDescription('')
   }
 
   // 총 수입/지출 계산
