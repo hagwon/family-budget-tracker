@@ -5,9 +5,10 @@ import './Auth.css'
 
 interface AuthProps {
   darkMode: boolean
+  toggleDarkMode: () => void
 }
 
-const Auth = ({ darkMode }: AuthProps) => {
+const Auth = ({ darkMode, toggleDarkMode }: AuthProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -41,9 +42,16 @@ const Auth = ({ darkMode }: AuthProps) => {
 
   return (
     <div className={`auth-container ${darkMode ? 'dark' : 'light'}`}>
+      {/* 테마 토글 버튼 */}
+      <div className="theme-toggle">
+        <button onClick={toggleDarkMode} className="theme-button">
+          {darkMode ? '☀️' : '🌙'}
+        </button>
+      </div>
+
       <div className="auth-card glass-card">
-        <h2>👨‍👩‍👧‍👦 가족 가계부</h2>
-        <p>가족 구성원으로 로그인하세요</p>
+        <h2>👨‍👩‍👧‍👦 쭈 가계부</h2>
+        <p>쭈의 가족들만 로그인하세요.</p>
 
         <form onSubmit={handleLogin} className="auth-form">
           <div className="form-group">
@@ -79,7 +87,6 @@ const Auth = ({ darkMode }: AuthProps) => {
           <p>🔒 <strong>보안 안내:</strong></p>
           <ul>
             <li>등록된 가족만 접근 가능합니다.</li>
-            <li>정확한 이메일과 비밀번호를 입력하세요.</li>
             <li>계정 문의는 관리자에게 연락하세요.</li>
           </ul>
         </div>

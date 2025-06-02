@@ -57,7 +57,7 @@ function App() {
     }
   }
 
-  // 다크모드 토글
+  // 다크모드 토글 함수
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
     localStorage.setItem('darkMode', (!darkMode).toString())
@@ -173,9 +173,9 @@ function App() {
     )
   }
 
-  // 로그인하지 않은 경우 Auth 컴포넌트 표시
+  // 로그인하지 않은 경우 Auth 컴포넌트 표시 (테마 토글 기능 포함)
   if (!user) {
-    return <Auth darkMode={darkMode} />
+    return <Auth darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
   }
 
   return (
@@ -196,7 +196,7 @@ function App() {
           </button>
         </div>
 
-        <h1>👨‍👩‍👧‍👦 가족 가계부</h1>
+        <h1>👨‍👩‍👧‍👦 쭈 가계부</h1>
         
         {/* 잔액 표시 */}
         <div className="balance-summary glass-card">
