@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { db } from './firebase'
+import { db, auth } from './firebase'
 import { 
   collection, 
   addDoc, 
@@ -8,6 +8,9 @@ import {
   orderBy, 
   query 
 } from 'firebase/firestore'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import type { User } from 'firebase/auth'
+import Auth from './Auth'
 
 // 거래 내역 타입 정의
 interface Transaction {
@@ -17,6 +20,8 @@ interface Transaction {
   description: string
   date: string
   type: 'income' | 'expense'
+  userName?: string
+  userId?: string
 }
 
 function App() {
@@ -27,9 +32,49 @@ function App() {
   const [description, setDescription] = useState('')
   const [type, setType] = useState<'income' | 'expense'>('expense')
   const [loading, setLoading] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
+  
+  // 인증 관련 상태 추가
+  const [user, setUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  // 인증 상태 감지
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+      setAuthLoading(false)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  // 로그아웃 함수 추가
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+    } catch (error) {
+      console.error('로그아웃 에러:', error)
+    }
+  }
+
+  // 다크모드 토글
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    localStorage.setItem('darkMode', (!darkMode).toString())
+  }
+
+  // 다크모드 설정 로드
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode')
+    if (savedDarkMode) {
+      setDarkMode(savedDarkMode === 'true')
+    }
+  }, [])
 
   // Firebase에서 데이터 실시간 로드
   useEffect(() => {
+    if (!user) return
+
     const q = query(collection(db, 'transactions'), orderBy('date', 'desc'))
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -44,7 +89,7 @@ function App() {
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [user])
 
   // 금액 포맷팅 함수
   const formatNumber = (value: string) => {
@@ -78,7 +123,9 @@ function App() {
         description,
         date: new Date().toISOString().split('T')[0],
         type,
-        createdAt: new Date()
+        createdAt: new Date(),
+        userId: user?.uid,
+        userName: user?.displayName || user?.email || '익명'
       }
 
       // Firestore에 데이터 추가
@@ -109,31 +156,68 @@ function App() {
 
   const balance = totalIncome - totalExpense
 
+  // 로딩 중이면 로딩 화면
+  if (authLoading) {
+    return (
+      <div className={`App ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontSize: '1.5rem' 
+        }}>
+          로딩 중... 🔄
+        </div>
+      </div>
+    )
+  }
+
+  // 로그인하지 않은 경우 Auth 컴포넌트 표시
+  if (!user) {
+    return <Auth darkMode={darkMode} />
+  }
+
   return (
-    <div className="App">
+    <div className={`App ${darkMode ? 'dark-theme' : 'light-theme'}`}>
       <header className="App-header">
+        {/* 다크모드 토글 버튼 */}
+        <div className="theme-toggle">
+          <button onClick={toggleDarkMode} className="theme-button">
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
+
+        {/* 사용자 정보 및 로그아웃 */}
+        <div className="user-info">
+          <span>👋 {user.displayName || user.email}님</span>
+          <button onClick={handleLogout} className="logout-button">
+            로그아웃
+          </button>
+        </div>
+
         <h1>👨‍👩‍👧‍👦 가족 가계부</h1>
         
         {/* 잔액 표시 */}
-        <div className="balance-summary">
+        <div className="balance-summary glass-card">
           <div className="balance-item">
             <span>💰 총 잔액: </span>
-            <span style={{ color: balance >= 0 ? 'green' : 'red' }}>
+            <span style={{ color: balance >= 0 ? '#27ae60' : '#e74c3c' }}>
               {balance.toLocaleString()}원
             </span>
           </div>
           <div className="balance-item">
             <span>📈 수입: </span>
-            <span style={{ color: 'blue' }}>{totalIncome.toLocaleString()}원</span>
+            <span style={{ color: '#3498db' }}>{totalIncome.toLocaleString()}원</span>
           </div>
           <div className="balance-item">
             <span>📉 지출: </span>
-            <span style={{ color: 'red' }}>{totalExpense.toLocaleString()}원</span>
+            <span style={{ color: '#e74c3c' }}>{totalExpense.toLocaleString()}원</span>
           </div>
         </div>
 
         {/* 거래 입력 폼 */}
-        <div className="transaction-form">
+        <div className="transaction-form glass-card">
           <h3>새 거래 추가</h3>
           
           <div className="form-group">
@@ -186,7 +270,7 @@ function App() {
 
           <button 
             onClick={addTransaction} 
-            className="add-button"
+            className={`add-button ${loading ? 'loading' : ''}`}
             disabled={loading}
           >
             {loading ? '추가 중...' : '거래 추가'}
@@ -194,7 +278,7 @@ function App() {
         </div>
 
         {/* 거래 내역 리스트 */}
-        <div className="transaction-list">
+        <div className="transaction-list glass-card">
           <h3>거래 내역</h3>
           {transactions.length === 0 ? (
             <p>아직 거래 내역이 없습니다.</p>
@@ -208,6 +292,7 @@ function App() {
                   <span className="transaction-category">{transaction.category}</span>
                   <span className="transaction-description">{transaction.description}</span>
                   <span className="transaction-date">{transaction.date}</span>
+                  <span className="transaction-user">👤 {transaction.userName || '익명'}</span>
                 </div>
                 <div className={`transaction-amount ${transaction.type}`}>
                   {transaction.type === 'income' ? '+' : '-'}

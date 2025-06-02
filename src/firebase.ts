@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
 // Firebase 설정 객체
 const firebaseConfig = {
@@ -16,5 +17,8 @@ const app = initializeApp(firebaseConfig)
 
 // Firestore 데이터베이스 가져오기
 export const db = getFirestore(app)
+
+// Authentication 가져오기
+export const auth = getAuth(app)
 
 export default app
