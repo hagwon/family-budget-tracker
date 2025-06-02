@@ -17,9 +17,4 @@ const app = initializeApp(firebaseConfig)
 // Firestore 데이터베이스 가져오기
 export const db = getFirestore(app)
 
-// 테스트 코드 추가
-console.log('Firebase app initialized:', app)
-console.log('Firestore db:', db)
-console.log('Project ID:', firebaseConfig.projectId)
-
 export default app

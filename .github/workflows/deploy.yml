@@ -21,6 +21,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
+    # 환경 설정 추가
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v4
