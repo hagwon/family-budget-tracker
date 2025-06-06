@@ -12,16 +12,6 @@
   justify-content: center;
 }
 
-/* 배경 패턴 제거 - App 컨테이너에서 이미 처리됨 */
-
-.budget-overview-container.light {
-  /* 배경 그라디언트 제거 - App에서 처리 */
-}
-
-.budget-overview-container.dark {
-  /* 배경 그라디언트 제거 - App에서 처리 */
-}
-
 /* 예산 개요 메인 컨테이너 */
 .budget-overview {
   background: transparent;
