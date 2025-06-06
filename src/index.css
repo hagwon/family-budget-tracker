@@ -1,28 +1,30 @@
-:root {
+/* CSS 파일 import */
+@import './styles/variables.css';
+@import './styles/utilities.css';
+@import './styles/components.css';
+
+/* 글로벌 리셋 및 기본 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  font-weight: var(--font-normal);
+  color: var(--text-light);
+  background-color: var(--bg-light);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
   margin: 0;
   display: flex;
   place-items: center;
@@ -30,39 +32,237 @@ body {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.dark body {
+  color: var(--text-dark);
+  background-color: var(--bg-dark);
 }
 
+/* 링크 스타일 */
+a {
+  font-weight: var(--font-medium);
+  color: var(--primary-color);
+  text-decoration: inherit;
+  transition: color var(--transition-normal);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* 제목 스타일 */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-bold);
+  line-height: 1.1;
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--text-4xl);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+}
+
+h4 {
+  font-size: var(--text-xl);
+}
+
+h5 {
+  font-size: var(--text-lg);
+}
+
+h6 {
+  font-size: var(--text-base);
+}
+
+/* 기본 버튼 스타일 */
 button {
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--bg-light);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color var(--transition-normal);
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--primary-color);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.dark button {
+  background-color: var(--bg-dark);
+}
+
+/* 입력 필드 스타일 */
+input, textarea, select {
+  font-family: inherit;
+  font-size: var(--text-base);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  padding: 0.5em;
+  transition: border-color var(--transition-normal);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.dark input, .dark textarea, .dark select {
+  background-color: var(--bg-dark-secondary);
+  border-color: var(--border-dark);
+  color: var(--text-dark);
+}
+
+/* 스크롤바 전역 스타일 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--border-dark);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* 선택 영역 스타일 */
+::selection {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.dark ::selection {
+  background-color: var(--secondary-color);
+}
+
+/* 포커스 가능한 요소들의 아웃라인 */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* 이미지 반응형 */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 테이블 기본 스타일 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.dark th, .dark td {
+  border-bottom-color: var(--border-dark);
+}
+
+/* 리스트 스타일 */
+ul, ol {
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.25em;
+}
+
+/* 코드 스타일 */
+code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+.dark code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1em;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.dark pre {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 인라인 요소 스타일 */
+strong {
+  font-weight: var(--font-bold);
+}
+
+em {
+  font-style: italic;
+}
+
+/* HR 스타일 */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--spacing-xl) 0;
+}
+
+.dark hr {
+  background: var(--border-dark);
+}
+
+/* 프린트 스타일 */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  
+  .theme-toggle,
+  .logout-button,
+  .add-button {
+    display: none !important;
   }
 }

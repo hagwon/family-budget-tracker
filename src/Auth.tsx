@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from 'firebase/auth';
-import { auth } from './firebase';
-import Modal from './Modal';
+import { auth } from './hooks/firebase';
+import Modal from './components/Modal';
+import ThemeToggle from './components/ThemeToggle';
 import './Auth.css';
 
 interface AuthProps {
@@ -37,6 +38,14 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
   // 이메일/비밀번호 로그인
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 빈 필드 체크
+    if (!email.trim() || !password.trim()) {
+      setModalMessage('이메일과 비밀번호를 모두 입력해주세요.');
+      setShowModal(true);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -62,8 +71,18 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
         case 'auth/invalid-credential':
           errorMessage = '이메일 또는 비밀번호가 올바르지 않습니다.';
           break;
+        case 'auth/user-disabled':
+          errorMessage = '비활성화된 계정입니다. 관리자에게 문의하세요.';
+          break;
+        case 'auth/network-request-failed':
+          errorMessage = '네트워크 연결을 확인해주세요.';
+          break;
+        case 'auth/internal-error':
+          errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+          break;
         default:
-          errorMessage = '로그인에 실패했습니다.';
+          errorMessage = '로그인에 실패했습니다. 다시 시도해주세요.';
+          console.error('Login error:', error);
           break;
       }
       
@@ -74,21 +93,27 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
     }
   };
 
+  // Enter 키 처리
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !loading) {
+      handleLogin(e as any);
+    }
+  };
+
   return (
     <div className={`auth-container ${isDarkMode ? 'dark' : 'light'}`}>
       {/* 테마 토글 버튼 */}
-      <div className="theme-toggle" onClick={toggleThemeMode}>
-        <button onClick={toggleThemeMode} className="theme-button">
-          {themeMode === 'light' ? '☀️' : themeMode === 'dark' ? '🌙' : '🎲'}
-        </button>
-        <span className="theme-mode-text">
-          {themeMode === 'light' ? '라이트' : themeMode === 'dark' ? '다크' : '랜덤'} 모드
-        </span>
-      </div>
+      <ThemeToggle
+        themeMode={themeMode}
+        isDarkMode={isDarkMode}
+        onToggle={toggleThemeMode}
+        variant="auth"
+        position="fixed"
+      />
 
       <div className="auth-card glass-card">
         <h2>
-          😘 <span className="title-text">쭈 가계부</span>
+          😘 <span className="title-text">쭈 가계부</span> 
         </h2>
         <p>쭈의 가족 가계부입니다.</p>
 
@@ -99,7 +124,11 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
               required
+              autoComplete="email"
+              aria-label="이메일 주소"
             />
           </div>
 
@@ -109,14 +138,19 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
               required
+              autoComplete="current-password"
+              aria-label="비밀번호"
             />
           </div>
 
           <button 
             type="submit" 
             className="auth-button"
-            disabled={loading}
+            disabled={loading || !email.trim() || !password.trim()}
+            aria-label={loading ? '로그인 처리 중' : '로그인'}
           >
             {loading ? '로그인 중...' : '로그인'}
           </button>
@@ -140,6 +174,8 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
         message={modalMessage}
         type="error"
         isDarkMode={isDarkMode}
+        confirmText="확인"
+        icon="❌"
       />
     </div>
   );

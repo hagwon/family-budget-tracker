@@ -1,0 +1,1051 @@
+/* =====================================
+   Animations & Keyframes
+   ===================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* =====================================
+   Display Utilities
+   ===================================== */
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.inline {
+  display: inline;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.table {
+  display: table;
+}
+
+.hidden {
+  display: none;
+}
+
+/* =====================================
+   Flexbox Utilities
+   ===================================== */
+
+/* Flex Direction */
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+/* Flex Wrap */
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+/* Flex */
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.flex-auto {
+  flex: 1 1 auto;
+}
+
+.flex-none {
+  flex: none;
+}
+
+/* Justify Content */
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+/* Align Items */
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+/* =====================================
+   Grid Utilities
+   ===================================== */
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-7 {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+/* Grid Gap */
+.gap-1 {
+  gap: 1px;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-4 {
+  gap: 16px;
+}
+
+.gap-6 {
+  gap: 24px;
+}
+
+.gap-8 {
+  gap: 32px;
+}
+
+/* Semantic Gap */
+.gap-xs {
+  gap: 8px;
+}
+
+.gap-sm {
+  gap: 12px;
+}
+
+.gap-md {
+  gap: 16px;
+}
+
+.gap-lg {
+  gap: 20px;
+}
+
+.gap-xl {
+  gap: 24px;
+}
+
+/* =====================================
+   Spacing Utilities
+   ===================================== */
+
+/* Padding */
+.p-0 {
+  padding: 0;
+}
+
+.p-2 {
+  padding: 8px;
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+.p-8 {
+  padding: 32px;
+}
+
+/* Semantic Padding */
+.p-xs {
+  padding: 8px;
+}
+
+.p-sm {
+  padding: 12px;
+}
+
+.p-md {
+  padding: 16px;
+}
+
+.p-lg {
+  padding: 20px;
+}
+
+.p-xl {
+  padding: 24px;
+}
+
+.p-2xl {
+  padding: 32px;
+}
+
+/* Padding X & Y */
+.px-2 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.px-6 {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.py-2 {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.py-4 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.py-6 {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+/* Margin */
+.m-0 {
+  margin: 0;
+}
+
+.m-2 {
+  margin: 8px;
+}
+
+.m-4 {
+  margin: 16px;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+/* Margin X & Y */
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-2 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.my-4 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Individual Margin */
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-6 {
+  margin-bottom: 24px;
+}
+
+/* =====================================
+   Width & Height Utilities
+   ===================================== */
+
+.w-full {
+  width: 100%;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.max-w-sm {
+  max-width: 24rem;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
+}
+
+.max-w-2xl {
+  max-width: 42rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+/* =====================================
+   Typography Utilities
+   ===================================== */
+
+/* Text Alignment */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Font Weights */
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* Font Sizes */
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+}
+
+/* =====================================
+   Position Utilities
+   ===================================== */
+
+.static {
+  position: static;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.left-0 {
+  left: 0;
+}
+
+/* =====================================
+   Z-Index Utilities
+   ===================================== */
+
+.z-0 {
+  z-index: 0;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
+}
+
+.z-30 {
+  z-index: 30;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.z-1000 {
+  z-index: 1000;
+}
+
+.z-2000 {
+  z-index: 2000;
+}
+
+/* =====================================
+   Overflow Utilities
+   ===================================== */
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+/* =====================================
+   Border Radius Utilities
+   ===================================== */
+
+.rounded-none {
+  border-radius: 0;
+}
+
+.rounded-sm {
+  border-radius: 4px;
+}
+
+.rounded {
+  border-radius: 8px;
+}
+
+.rounded-md {
+  border-radius: 8px;
+}
+
+.rounded-lg {
+  border-radius: 12px;
+}
+
+.rounded-xl {
+  border-radius: 16px;
+}
+
+.rounded-2xl {
+  border-radius: 20px;
+}
+
+.rounded-3xl {
+  border-radius: 24px;
+}
+
+.rounded-full {
+  border-radius: 50%;
+}
+
+/* =====================================
+   Opacity Utilities
+   ===================================== */
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-30 {
+  opacity: 0.3;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.opacity-70 {
+  opacity: 0.7;
+}
+
+.opacity-80 {
+  opacity: 0.8;
+}
+
+.opacity-90 {
+  opacity: 0.9;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+/* =====================================
+   Shadow Utilities
+   ===================================== */
+
+.shadow-none {
+  box-shadow: none;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode shadows */
+.dark .shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark .shadow,
+.dark .shadow-md {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================
+   Transform Utilities
+   ===================================== */
+
+.transform {
+  transform: var(--tw-transform);
+}
+
+.scale-95 {
+  transform: scale(0.95);
+}
+
+.scale-100 {
+  transform: scale(1);
+}
+
+.scale-105 {
+  transform: scale(1.05);
+}
+
+.scale-110 {
+  transform: scale(1.1);
+}
+
+.rotate-0 {
+  transform: rotate(0deg);
+}
+
+.rotate-15 {
+  transform: rotate(15deg);
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.-rotate-90 {
+  transform: rotate(-90deg);
+}
+
+/* =====================================
+   Transition Utilities
+   ===================================== */
+
+.transition {
+  transition: all 0.3s ease;
+}
+
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-colors {
+  transition: color, background-color, border-color 0.3s ease;
+}
+
+.transition-transform {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+  transition-duration: 0.1s;
+}
+
+.transition-normal {
+  transition-duration: 0.3s;
+}
+
+.transition-slow {
+  transition-duration: 0.6s;
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =====================================
+   Backdrop Filter Utilities
+   ===================================== */
+
+.backdrop-blur-none {
+  backdrop-filter: none;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+}
+
+/* =====================================
+   Cursor Utilities
+   ===================================== */
+
+.cursor-auto {
+  cursor: auto;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-wait {
+  cursor: wait;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+/* =====================================
+   User Select Utilities
+   ===================================== */
+
+.select-none {
+  user-select: none;
+}
+
+.select-text {
+  user-select: text;
+}
+
+.select-all {
+  user-select: all;
+}
+
+.select-auto {
+  user-select: auto;
+}
+
+/* =====================================
+   Pointer Events Utilities
+   ===================================== */
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.pointer-events-auto {
+  pointer-events: auto;
+}
+
+/* =====================================
+   Background Utilities
+   ===================================== */
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.bg-gray-200 {
+  background-color: #e5e7eb;
+}
+
+.bg-gray-300 {
+  background-color: #d1d5db;
+}
+
+.bg-gray-400 {
+  background-color: #9ca3af;
+}
+
+.bg-gray-500 {
+  background-color: #6b7280;
+}
+
+/* =====================================
+   Text Color Utilities
+   ===================================== */
+
+.text-transparent {
+  color: transparent;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-black {
+  color: black;
+}
+
+.text-gray-50 {
+  color: #f9fafb;
+}
+
+.text-gray-100 {
+  color: #f3f4f6;
+}
+
+.text-gray-200 {
+  color: #e5e7eb;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.text-gray-700 {
+  color: #374151;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+/* =====================================
+   Letter Spacing Utilities
+   ===================================== */
+
+.tracking-tighter {
+  letter-spacing: -0.05em;
+}
+
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+.tracking-normal {
+  letter-spacing: 0em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+/* =====================================
+   Responsive Design Helpers
+   ===================================== */
+
+/* 768px 이하에서만 적용 */
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* 768px 이상에서만 적용 */
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* =====================================
+   Accessibility
+   ===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .transition,
+  .transition-all,
+  .transition-colors,
+  .transition-transform {
+    transition: none !important;
+  }
+  
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-slide-up,
+  .animate-pulse,
+  .animate-spin {
+    animation: none !important;
+  }
+}
