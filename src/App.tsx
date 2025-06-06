@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from 'firebase/auth';
 import type { User }  from 'firebase/auth';
-import { auth } from './firebase';
+import { auth } from './hooks/firebase';
 import Auth from './Auth';
 import BudgetOverview from './BudgetOverview';
+import ThemeToggle from './components/ThemeToggle';
 import './App.css';
 
 function App() {
@@ -112,14 +113,13 @@ function App() {
   return (
     <div className={`app-container ${isDarkMode ? 'dark' : 'light'}`}>
       {/* 테마 토글 버튼 */}
-      <div className="theme-toggle">
-        <button onClick={toggleThemeMode} className="theme-button">
-          {themeMode === 'light' ? '☀️' : themeMode === 'dark' ? '🌙' : '🎲'}
-        </button>
-        <span className="theme-mode-text">
-          {themeMode === 'light' ? '라이트' : themeMode === 'dark' ? '다크' : '랜덤'} 모드
-        </span>
-      </div>
+      <ThemeToggle
+        themeMode={themeMode}
+        isDarkMode={isDarkMode}
+        onToggle={toggleThemeMode}
+        variant="app"
+        position="fixed"
+      />
 
       {/* 앱 헤더 */}
       <header className="app-header">
