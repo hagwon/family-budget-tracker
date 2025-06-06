@@ -50,6 +50,7 @@
   z-index: 1;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: visible; /* 툴팁이 잘리지 않도록 추가 */
 }
 
 .budget-overview.light {
@@ -165,11 +166,13 @@
   display: flex;
   gap: var(--spacing-xl);
   align-items: flex-start;
+  overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
 }
 
 .main-content {
   flex: 1;
   min-width: 0;
+  overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
 }
 
 /* 예산 메인 섹션 */
@@ -178,6 +181,7 @@
   flex-direction: column;
   gap: var(--spacing-xl);
   width: 100%;
+  overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
 }
 
 /* 월별 통계 */
@@ -196,6 +200,7 @@
   border: 1px solid rgba(71, 85, 105, 0.3);
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-md);
+  overflow: visible; /* 툴팁이 잘리지 않도록 수정 */
 }
 
 .budget-overview.light .calendar-container {
@@ -226,6 +231,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
+  overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
 }
 
 .calendar-day {
@@ -239,6 +245,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
 }
 
 .budget-overview.light .calendar-day {
@@ -262,11 +269,20 @@
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
 }
 
+/* 날짜 헤더 - 숫자와 공휴일 정보를 한 줄에 표시 */
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  min-height: 20px;
+}
+
 .day-number {
   font-weight: var(--font-semibold);
   font-size: var(--text-sm);
-  margin-bottom: 4px;
   color: var(--text-dark);
+  flex-shrink: 0;
 }
 
 .budget-overview.light .day-number {
@@ -276,6 +292,97 @@
 .calendar-day.today .day-number {
   color: var(--secondary-color);
   font-weight: var(--font-bold);
+}
+
+/* 공휴일/일요일 날짜 숫자 스타일 - 지출 색상(#ef4444)과 동일하게 설정 */
+.day-number.holiday-date,
+.day-number.sunday-date {
+  color: var(--error-color); /* #ef4444 - 지출과 동일한 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+/* 다크모드에서도 지출과 동일한 빨간색 사용 (은은한 색상 제거) */
+.budget-overview.dark .day-number.holiday-date,
+.budget-overview.dark .day-number.sunday-date {
+  color: var(--error-color); /* #ef4444 - 라이트모드와 동일 */
+}
+
+/* 공휴일 이름 표시 - 숫자 옆에 축약해서 표시 */
+.holiday-name {
+  font-size: 0.6rem;
+  font-weight: var(--font-medium);
+  color: var(--error-color);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 3px;
+  padding: 1px 4px;
+  margin-left: 4px;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 45px;
+  cursor: help;
+  position: relative;
+  will-change: transform; /* GPU 가속을 위해 추가 */
+}
+
+.budget-overview.dark .holiday-name {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* 공휴일 툴팁 */
+.holiday-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: rgba(30, 41, 59, 0.95);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: var(--font-medium);
+  white-space: nowrap;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.1s ease-out, visibility 0.1s ease-out, transform 0.1s ease-out;
+  will-change: opacity, visibility, transform;
+}
+
+.budget-overview.light .holiday-tooltip {
+  background: rgba(51, 65, 85, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.holiday-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(30, 41, 59, 0.95);
+}
+
+.budget-overview.light .holiday-tooltip::after {
+  border-top-color: rgba(51, 65, 85, 0.95);
+}
+
+/* 즉시 hover 효과 - 딜레이 없음 */
+.holiday-name:hover .holiday-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  transition: opacity 0.05s ease-out, visibility 0.05s ease-out, transform 0.05s ease-out;
 }
 
 .day-transactions {
@@ -475,6 +582,12 @@
     height: 36px;
     font-size: var(--text-base);
   }
+
+  .holiday-name {
+    max-width: 30px;
+    font-size: 0.55rem;
+    padding: 1px 3px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -523,6 +636,18 @@
   .stat-amount {
     font-size: var(--text-xl);
   }
+
+  .day-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .holiday-name {
+    margin-left: 0;
+    max-width: 100%;
+    font-size: 0.5rem;
+  }
 }
 
 /* 데스크탑 대형 화면 최적화 */
@@ -533,7 +658,7 @@
 }
 
 /* =====================================
-   Holiday & Weekend Calendar Styles
+   Holiday & Sunday Calendar Styles
    ===================================== */
 
 /* 공휴일 상태 표시 */
@@ -555,192 +680,70 @@
   border-color: rgba(239, 68, 68, 0.2);
 }
 
-/* 주말 표시 (토요일, 일요일 헤더) */
+/* 주말 표시 (요일 헤더) */
 .weekday.sunday {
-  color: var(--error-color);
+  color: var(--error-color); /* 일요일 - 빨간색 */
   font-weight: var(--font-bold);
 }
 
 .weekday.saturday {
-  color: #3b82f6;
+  color: #3b82f6; /* 토요일 - 파란색 */
   font-weight: var(--font-bold);
 }
 
 .budget-overview.dark .weekday.sunday {
-  color: #fca5a5;
+  color: var(--error-color); /* 다크모드 일요일 - 동일한 빨간색 */
 }
 
 .budget-overview.dark .weekday.saturday {
-  color: #93c5fd;
+  color: #93c5fd; /* 다크모드 토요일 - 밝은 파란색 */
 }
 
-/* 공휴일/주말 달력 날짜 스타일 */
-.calendar-day.holiday-weekend {
-  background: rgba(239, 68, 68, 0.05);
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
-.budget-overview.dark .calendar-day.holiday-weekend {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.calendar-day.holiday-weekend:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.budget-overview.dark .calendar-day.holiday-weekend:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-}
-
-/* 공휴일/주말 날짜 숫자 스타일 */
-.day-number.holiday-date {
-  color: var(--error-color);
-  font-weight: var(--font-bold);
-}
-
-.budget-overview.dark .day-number.holiday-date {
-  color: #fca5a5;
-}
-
-/* 공휴일 이름 표시 */
-.holiday-name {
-  font-size: 0.6rem;
-  font-weight: var(--font-semibold);
-  color: var(--error-color);
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: 4px;
-  padding: 2px 4px;
-  margin-bottom: 4px;
-  text-align: center;
-  line-height: 1.2;
-  word-break: keep-all;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.budget-overview.dark .holiday-name {
-  color: #fca5a5;
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-/* 오늘 날짜가 공휴일인 경우 */
-.calendar-day.today.holiday-weekend {
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.2), 
-    rgba(239, 68, 68, 0.2)
-  );
-  border: 2px solid var(--secondary-color);
-  box-shadow: 
-    0 0 20px rgba(139, 92, 246, 0.3),
-    0 0 10px rgba(239, 68, 68, 0.2);
-}
-
-.calendar-day.today.holiday-weekend .day-number {
+/* 오늘 날짜가 공휴일/일요일인 경우 */
+.calendar-day.today .day-number.holiday-date,
+.calendar-day.today .day-number.sunday-date {
   background: linear-gradient(45deg, var(--secondary-color), var(--error-color));
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: var(--secondary-color); /* fallback */
+  color: var(--error-color); /* fallback */
   font-weight: var(--font-black);
 }
 
-/* 거래 내역과 공휴일 이름이 함께 있을 때 레이아웃 조정 */
-.calendar-day .day-transactions {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: var(--text-xs);
-  margin-top: auto;
-}
-
-/* 공휴일 툴팁 효과 */
-.holiday-name {
-  position: relative;
-  cursor: help;
-}
-
-.holiday-name:hover {
-  background: rgba(239, 68, 68, 0.2);
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-.budget-overview.dark .holiday-name:hover {
-  background: rgba(239, 68, 68, 0.25);
-}
-
-/* 긴 공휴일 이름 처리 */
-.holiday-name.long-name {
-  font-size: 0.55rem;
-  padding: 1px 3px;
-}
-
-/* 공휴일이 많은 날 (예: 연휴) 처리 */
-.calendar-day.multiple-holidays .holiday-name {
-  margin-bottom: 1px;
-  padding: 1px 2px;
-  font-size: 0.5rem;
-}
-
-/* 모바일에서 공휴일 표시 최적화 */
-@media (max-width: 768px) {
-  .holiday-name {
-    font-size: 0.5rem;
-    padding: 1px 2px;
-  }
-  
-  .calendar-day.today.holiday-weekend .day-number {
-    background: var(--secondary-color);
-    background-clip: unset;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
-    color: white;
-  }
-}
-
-@media (max-width: 480px) {
-  .holiday-name {
-    font-size: 0.45rem;
-    padding: 1px;
-    margin-bottom: 2px;
-  }
-  
-  .holiday-status {
-    font-size: var(--text-xs);
-    padding: var(--spacing-xs);
-  }
+/* 스크린 리더를 위한 숨겨진 텍스트 */
+.sr-only-holiday {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* 인쇄용 스타일 */
 @media print {
-  .calendar-day.holiday-weekend {
-    border: 2px solid #000 !important;
-  }
-  
-  .day-number.holiday-date {
-    color: #000 !important;
+  .day-number.holiday-date,
+  .day-number.sunday-date {
+    color: #ef4444 !important;
     font-weight: bold !important;
   }
   
   .holiday-name {
-    color: #000 !important;
+    color: #ef4444 !important;
     background: none !important;
-    border: 1px solid #000 !important;
+    border: 1px solid #ef4444 !important;
   }
 }
 
 /* 접근성 개선 */
 @media (prefers-contrast: high) {
-  .calendar-day.holiday-weekend {
-    border: 2px solid #dc2626;
+  .day-number.holiday-date,
+  .day-number.sunday-date {
+    color: #dc2626;
+    font-weight: bold;
   }
   
   .holiday-name {
@@ -752,17 +755,4 @@
     background: #450a0a;
     color: #fca5a5;
   }
-}
-
-/* 화면 읽기 프로그램을 위한 숨겨진 텍스트 */
-.sr-only-holiday {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }

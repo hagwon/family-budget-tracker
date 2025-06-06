@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from './hooks/firebase';
 import Modal from './components/Modal';
-import { useHolidays, isHoliday, isWeekend } from './hooks/useHolidays';
+import { useHolidays, isHoliday, isWeekend, getAPIKeyStatus, truncateHolidayName } from './hooks/useHolidays';
 import './BudgetOverview.css';
 
 interface BudgetItem {
@@ -27,8 +27,14 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   const [selectedItem, setSelectedItem] = useState<BudgetItem | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // 공휴일 정보 가져오기
-  const { holidays, loading: holidaysLoading, error: holidaysError } = useHolidays(
+  // 공휴일 정보 가져오기 (실시간 API 사용)
+  const { 
+    holidays, 
+    loading: holidaysLoading, 
+    error: holidaysError, 
+    dataSource,
+    isAPIConfigured 
+  } = useHolidays(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1
   );
@@ -45,6 +51,9 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   // 카테고리 옵션
   const expenseCategories = ['생활비', '식비', '교통비', '의료비', '교육비', '문화/여가', '기타'];
   const incomeCategories = ['급여', '용돈', '보너스', '투자수익', '기타'];
+
+  // API 키 상태 가져오기
+  const apiKeyStatus = getAPIKeyStatus();
 
   // 현재 월의 첫날과 마지막날 계산
   const getMonthRange = (date: Date) => {
@@ -190,7 +199,7 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
       setShowAddModal(false);
       resetForm();
     } catch (error) {
-      console.error('Error adding transaction:', error);
+      // 에러 처리
     }
   };
 
@@ -203,7 +212,7 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
       setShowDeleteModal(false);
       setSelectedItem(null);
     } catch (error) {
-      console.error('Error deleting transaction:', error);
+      // 에러 처리
     }
   };
 
@@ -213,9 +222,46 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
     setFormData({ ...formData, date: today });
   };
 
+  // 공휴일 상태 메시지 생성
+  const getHolidayStatusMessage = () => {
+    if (holidaysLoading) {
+      return { 
+        type: 'loading' as const, 
+        message: '공휴일 정보를 불러오는 중...' 
+      };
+    }
+
+    if (holidaysError) {
+      return { 
+        type: 'error' as const, 
+        message: holidaysError 
+      };
+    }
+
+    if (dataSource === 'api') {
+      return { 
+        type: 'success' as const, 
+        message: `실시간 공휴일 정보 (${holidays.length}개 공휴일 확인됨)` 
+      };
+    }
+
+    if (!isAPIConfigured) {
+      return { 
+        type: 'info' as const, 
+        message: `정적 공휴일 데이터 사용 중 (${holidays.length}개 공휴일)` 
+      };
+    }
+
+    return { 
+      type: 'info' as const, 
+      message: `백업 공휴일 데이터 사용 중 (${holidays.length}개 공휴일)` 
+    };
+  };
+
   const monthlyStats = getMonthlyStats();
   const monthlySummary = getMonthlyCategorySummary();
   const calendarDays = generateCalendarDays();
+  const holidayStatus = getHolidayStatusMessage();
 
   if (loading) {
     return (
@@ -258,23 +304,24 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
           </div>
         </div>
 
-        {/* 공휴일 로딩 상태 표시 */}
-        {holidaysLoading && (
-          <div className="holiday-status">
-            공휴일 정보를 불러오는 중...
-          </div>
-        )}
+        {/* 공휴일 상태 표시 */}
+        <div className={`holiday-status ${holidayStatus.type}`}>
+          {holidayStatus.type === 'success' && '✅ '}
+          {holidayStatus.type === 'error' && '❌ '}
+          {holidayStatus.type === 'info' && 'ℹ️ '}
+          {holidayStatus.type === 'loading' && '⏳ '}
+          {holidayStatus.message}
+          {!isAPIConfigured && (
+            <div style={{ fontSize: '0.8rem', marginTop: '4px', opacity: 0.8 }}>
+              {apiKeyStatus.instruction}
+            </div>
+          )}
+        </div>
 
-        {holidaysError && (
-          <div className="holiday-status error">
-            {holidaysError} (기본 공휴일 정보를 사용합니다)
-          </div>
-        )}
-
-        {/* 메인 콘텐츠 - 수정된 레이아웃 */}
+        {/* 메인 콘텐츠 */}
         <div className="content-wrapper">
           <div className="main-content">
-            {/* 가계부 메인 섹션 - 월별 통계와 캘린더 */}
+            {/* 가계부 메인 섹션 */}
             <div className="budget-main-section">
               {/* 월별 통계 */}
               <div className="monthly-stats">
@@ -322,22 +369,44 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
                       .filter(t => t.type === 'expense')
                       .reduce((sum, t) => sum + t.amount, 0);
 
+                    // 날짜 숫자에 적용할 클래스 결정
+                    let dayNumberClass = 'day-number';
+                    if (holidayInfo) {
+                      // 공휴일인 경우 (빨간색)
+                      dayNumberClass += ' holiday-date';
+                    } else if (isWeekendDay && day.getDay() === 0) {
+                      // 일요일인 경우 (공휴일이 아닌, 빨간색)
+                      dayNumberClass += ' sunday-date';
+                    } else if (day.getDay() === 6) {
+                      // 토요일인 경우 (연한 파란색)
+                      dayNumberClass += ' saturday-date';
+                    }
+                    // 평일인 경우 일반 색상 유지
+
                     return (
                       <div 
                         key={index} 
-                        className={`calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''} ${holidayInfo || isWeekendDay ? 'holiday-weekend' : ''}`}
+                        className={`calendar-day ${!isCurrentMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`}
+                        title={holidayInfo ? `${holidayInfo.name} (공휴일)` : isWeekendDay ? '주말' : ''}
                       >
-                        <div className={`day-number ${holidayInfo || isWeekendDay ? 'holiday-date' : ''}`}>
-                          {day.getDate()}
+                        {/* 날짜 헤더 - 숫자와 공휴일 정보를 한 줄에 표시 */}
+                        <div className="day-header">
+                          <div className={dayNumberClass}>
+                            {day.getDate()}
+                          </div>
+                          
+                          {/* 공휴일 이름 - 숫자 옆에 축약해서 표시 */}
+                          {isCurrentMonth && holidayInfo && (
+                            <div className="holiday-name">
+                              {truncateHolidayName(holidayInfo.name, 3)}
+                              <div className="holiday-tooltip">
+                                {holidayInfo.name}
+                              </div>
+                            </div>
+                          )}
                         </div>
                         
-                        {/* 공휴일/기념일 표시 */}
-                        {isCurrentMonth && holidayInfo && (
-                          <div className="holiday-name">
-                            {holidayInfo.name}
-                          </div>
-                        )}
-                        
+                        {/* 거래 내역 표시 */}
                         {isCurrentMonth && transactions.length > 0 && (
                           <div className="day-transactions">
                             {dayIncome > 0 && (
@@ -348,6 +417,18 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
                             )}
                           </div>
                         )}
+                        
+                        {/* 스크린 리더용 숨겨진 텍스트 */}
+                        {holidayInfo && (
+                          <span className="sr-only-holiday">
+                            {holidayInfo.name} 공휴일
+                          </span>
+                        )}
+                        {!holidayInfo && isWeekendDay && day.getDay() === 0 && (
+                          <span className="sr-only-holiday">
+                            일요일
+                          </span>
+                        )}
                       </div>
                     );
                   })}
@@ -356,7 +437,7 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
             </div>
           </div>
           
-          {/* 월 정산 테이블 - 오른쪽 사이드바 */}
+          {/* 월 정산 테이블 */}
           <div className="monthly-summary">
             <h3 className="summary-title">
               📊 월별 정산
@@ -400,6 +481,30 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
                 </tr>
               </tfoot>
             </table>
+            
+            {/* API 상태 정보 */}
+            <div style={{ 
+              marginTop: '16px', 
+              padding: '12px', 
+              background: isDarkMode ? 'rgba(51, 65, 85, 0.5)' : 'rgba(248, 250, 252, 0.8)',
+              borderRadius: '8px',
+              fontSize: '0.8rem',
+              opacity: 0.8
+            }}>
+              <div>
+                <strong>공휴일 데이터:</strong> {dataSource === 'api' ? '실시간 API' : '정적 데이터'}
+              </div>
+              {dataSource === 'api' && (
+                <div style={{ color: '#10b981' }}>
+                  ✅ 최신 공휴일 정보가 자동 업데이트됩니다
+                </div>
+              )}
+              {!isAPIConfigured && (
+                <div style={{ color: '#f59e0b', marginTop: '4px' }}>
+                  💡 .env 파일에 VITE_HOLIDAY_API_KEY를 설정하면 실시간 업데이트가 가능합니다
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

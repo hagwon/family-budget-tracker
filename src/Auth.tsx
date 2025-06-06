@@ -112,9 +112,9 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
       />
 
       <div className="auth-card glass-card">
-        <h2>
+        <h1>
           😘 <span className="title-text">쭈 가계부</span> 
-        </h2>
+        </h1>
         <p>쭈의 가족 가계부입니다.</p>
 
         <form onSubmit={handleLogin} className="auth-form">
