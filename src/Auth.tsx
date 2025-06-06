@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from 'firebase/auth';
 import { auth } from './hooks/firebase';
 import Modal from './components/Modal';
@@ -11,6 +11,17 @@ interface AuthProps {
   isDarkMode: boolean;
 }
 
+const AUTH_ERRORS = {
+  'auth/user-not-found': '등록되지 않은 이메일입니다.',
+  'auth/wrong-password': '비밀번호가 올바르지 않습니다.',
+  'auth/invalid-email': '올바른 이메일 형식이 아닙니다.',
+  'auth/too-many-requests': '너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.',
+  'auth/invalid-credential': '이메일 또는 비밀번호가 올바르지 않습니다.',
+  'auth/user-disabled': '비활성화된 계정입니다. 관리자에게 문의하세요.',
+  'auth/network-request-failed': '네트워크 연결을 확인해주세요.',
+  'auth/internal-error': '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+} as const;
+
 const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,28 +29,9 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  // Auth 화면에서 랜덤 모드일 때 랜덤하게 테마 결정
-  useEffect(() => {
-    if (themeMode === 'random') {
-      // Auth 화면에서만 새로운 랜덤 테마 결정
-      const randomValue = Math.random();
-      const newIsDarkMode = randomValue > 0.5;
-      // 랜덤으로 결정된 결과를 저장
-      localStorage.setItem('randomThemeResult', newIsDarkMode ? 'dark' : 'light');
-    }
-  }, [themeMode]);
-
-  // 모달 닫기 함수
-  const closeModal = () => {
-    setShowModal(false);
-    setModalMessage('');
-  };
-
-  // 이메일/비밀번호 로그인
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 빈 필드 체크
     if (!email.trim() || !password.trim()) {
       setModalMessage('이메일과 비밀번호를 모두 입력해주세요.');
       setShowModal(true);
@@ -49,42 +41,11 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
     setLoading(true);
 
     try {
-      // 브라우저 세션 persistence 설정 (브라우저 종료 시 자동 로그아웃)
       await setPersistence(auth, browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
-      // 에러 메시지를 한국어로 변환
-      let errorMessage = '';
-      switch (error.code) {
-        case 'auth/user-not-found':
-          errorMessage = '등록되지 않은 이메일입니다.';
-          break;
-        case 'auth/wrong-password':
-          errorMessage = '비밀번호가 올바르지 않습니다.';
-          break;
-        case 'auth/invalid-email':
-          errorMessage = '올바른 이메일 형식이 아닙니다.';
-          break;
-        case 'auth/too-many-requests':
-          errorMessage = '너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.';
-          break;
-        case 'auth/invalid-credential':
-          errorMessage = '이메일 또는 비밀번호가 올바르지 않습니다.';
-          break;
-        case 'auth/user-disabled':
-          errorMessage = '비활성화된 계정입니다. 관리자에게 문의하세요.';
-          break;
-        case 'auth/network-request-failed':
-          errorMessage = '네트워크 연결을 확인해주세요.';
-          break;
-        case 'auth/internal-error':
-          errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
-          break;
-        default:
-          errorMessage = '로그인에 실패했습니다. 다시 시도해주세요.';
-          console.error('Login error:', error);
-          break;
-      }
+      const errorMessage = AUTH_ERRORS[error.code as keyof typeof AUTH_ERRORS] 
+        || '로그인에 실패했습니다. 다시 시도해주세요.';
       
       setModalMessage(errorMessage);
       setShowModal(true);
@@ -93,7 +54,6 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
     }
   };
 
-  // Enter 키 처리
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !loading) {
       handleLogin(e as any);
@@ -102,7 +62,6 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
 
   return (
     <div className={`auth-container ${isDarkMode ? 'dark' : 'light'}`}>
-      {/* 테마 토글 버튼 */}
       <ThemeToggle
         themeMode={themeMode}
         isDarkMode={isDarkMode}
@@ -166,10 +125,9 @@ const Auth = ({ themeMode, toggleThemeMode, isDarkMode }: AuthProps) => {
         </div>
       </div>
 
-      {/* 에러 모달 */}
       <Modal
         isOpen={showModal}
-        onClose={closeModal}
+        onClose={() => setShowModal(false)}
         title="로그인 실패"
         message={modalMessage}
         type="error"

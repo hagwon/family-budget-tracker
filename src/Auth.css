@@ -83,6 +83,13 @@
    Auth Card Content - 제목과 설명
    ===================================== */
 
+.auth-card h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #334155;
+}
+
 .auth-card h1 .title-text {
   color: #667eea;
 }
@@ -321,98 +328,6 @@
 }
 
 /* =====================================
-   Modal Styles - 에러 모달
-   ===================================== */
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 32px;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.2),
-    0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: slideUp 0.3s ease;
-}
-
-.auth-container.dark .modal-content {
-  background: rgba(30, 41, 59, 0.95);
-  color: #f8fafc;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.modal-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.modal-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #ef4444;
-}
-
-.auth-container.dark .modal-title {
-  color: #fca5a5;
-}
-
-.modal-message {
-  font-size: 1rem;
-  margin-bottom: 24px;
-  opacity: 0.8;
-  line-height: 1.5;
-  color: #64748b;
-}
-
-.auth-container.dark .modal-message {
-  color: #94a3b8;
-}
-
-.modal-button {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-}
-
-.modal-button:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
-}
-
-.modal-button:active {
-  transform: translateY(0);
-}
-
-/* =====================================
    Animations - 키프레임 애니메이션
    ===================================== */
 
@@ -436,26 +351,6 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 /* =====================================
    Mobile Responsive - 모바일 최적화
    ===================================== */
@@ -470,7 +365,7 @@
     border-radius: 20px;
   }
   
-  .auth-card h2 {
+  .auth-card h1 {
     font-size: 1.8rem;
   }
   
@@ -510,9 +405,4 @@
 
 .form-group input:focus-visible {
   outline: none; /* custom focus styles used instead */
-}
-
-.theme-button:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.5);
-  outline-offset: 2px;
 }

@@ -16,8 +16,8 @@ html {
 }
 
 body {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  line-height: var(--leading-normal);
   font-weight: var(--font-normal);
   color: var(--text-light);
   background-color: var(--bg-light);
@@ -52,81 +52,16 @@ a:hover {
 /* 제목 스타일 */
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-bold);
-  line-height: 1.1;
+  line-height: var(--leading-tight);
   margin: 0;
 }
 
-h1 {
-  font-size: var(--text-4xl);
-}
-
-h2 {
-  font-size: var(--text-3xl);
-}
-
-h3 {
-  font-size: var(--text-2xl);
-}
-
-h4 {
-  font-size: var(--text-xl);
-}
-
-h5 {
-  font-size: var(--text-lg);
-}
-
-h6 {
-  font-size: var(--text-base);
-}
-
-/* 기본 버튼 스타일 */
-button {
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: var(--text-base);
-  font-weight: var(--font-medium);
-  font-family: inherit;
-  background-color: var(--bg-light);
-  cursor: pointer;
-  transition: border-color var(--transition-normal);
-}
-
-button:hover {
-  border-color: var(--primary-color);
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.dark button {
-  background-color: var(--bg-dark);
-}
-
-/* 입력 필드 스타일 */
-input, textarea, select {
-  font-family: inherit;
-  font-size: var(--text-base);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-  padding: 0.5em;
-  transition: border-color var(--transition-normal);
-}
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-}
-
-.dark input, .dark textarea, .dark select {
-  background-color: var(--bg-dark-secondary);
-  border-color: var(--border-dark);
-  color: var(--text-dark);
-}
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+h6 { font-size: var(--text-base); }
 
 /* 스크롤바 전역 스타일 */
 ::-webkit-scrollbar {
@@ -209,7 +144,7 @@ li {
 
 /* 코드 스타일 */
 code {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: var(--font-mono);
   background-color: rgba(0, 0, 0, 0.1);
   padding: 0.2em 0.4em;
   border-radius: var(--radius-sm);
@@ -231,15 +166,6 @@ pre {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* 인라인 요소 스타일 */
-strong {
-  font-weight: var(--font-bold);
-}
-
-em {
-  font-style: italic;
-}
-
 /* HR 스타일 */
 hr {
   border: none;
@@ -250,19 +176,4 @@ hr {
 
 .dark hr {
   background: var(--border-dark);
-}
-
-/* 프린트 스타일 */
-@media print {
-  * {
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-  }
-  
-  .theme-toggle,
-  .logout-button,
-  .add-button {
-    display: none !important;
-  }
 }

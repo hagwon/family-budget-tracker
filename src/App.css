@@ -1,33 +1,13 @@
 /* 메인 앱 컨테이너 스타일 */
 .app-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-light-secondary) 100%);
+  background: var(--gradient-light-app);
   transition: all var(--transition-normal);
 }
 
 .app-container.dark {
-  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 100%);
+  background: var(--gradient-dark-app);
   color: var(--text-dark);
-}
-
-/* 앱 테마 토글 - 메인 앱용 */
-.app-container .theme-toggle {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: var(--border-light);
-  box-shadow: var(--shadow-md);
-}
-
-.app-container.dark .theme-toggle {
-  background: var(--card-bg-dark);
-  border-color: var(--border-dark);
-}
-
-.app-container .theme-button:hover {
-  background: rgba(102, 126, 234, 0.1);
-}
-
-.app-container.dark .theme-button:hover {
-  background: rgba(139, 92, 246, 0.1);
 }
 
 /* 앱 헤더 */
@@ -107,60 +87,6 @@
   overflow: hidden;
 }
 
-.placeholder-content {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 60px var(--spacing-lg);
-}
-
-.placeholder-content h2 {
-  font-size: 2.5rem;
-  font-weight: var(--font-bold);
-  margin-bottom: var(--spacing-md);
-  color: var(--text-light);
-}
-
-.app-container.dark .placeholder-content h2 {
-  color: var(--text-dark);
-}
-
-.placeholder-content p {
-  font-size: var(--text-xl);
-  opacity: 0.7;
-  margin-bottom: var(--spacing-2xl);
-  color: var(--text-light-secondary);
-}
-
-.app-container.dark .placeholder-content p {
-  color: var(--text-dark-secondary);
-}
-
-.theme-demo {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  border: 1px solid var(--border-light);
-  margin-top: var(--spacing-2xl);
-}
-
-.app-container.dark .theme-demo {
-  background: var(--card-bg-dark);
-  border-color: var(--border-dark);
-}
-
-.random-info {
-  margin-top: var(--spacing-sm) !important;
-  font-size: var(--text-base) !important;
-  color: var(--primary-color) !important;
-  font-weight: var(--font-semibold) !important;
-}
-
-.app-container.dark .random-info {
-  color: var(--secondary-color) !important;
-}
-
 /* 모바일 최적화 */
 @media (max-width: 768px) {
   .app-header {
@@ -178,27 +104,11 @@
     padding: 0;
     height: calc(100vh - 120px);
   }
-
-  .placeholder-content {
-    padding: var(--spacing-3xl) var(--spacing-md);
-  }
-
-  .placeholder-content h2 {
-    font-size: var(--text-3xl);
-  }
-
-  .placeholder-content p {
-    font-size: var(--text-lg);
-  }
 }
 
 @media (max-width: 480px) {
   .app-header h1 {
     font-size: 1.4rem;
-  }
-
-  .placeholder-content h2 {
-    font-size: 1.8rem;
   }
 
   .user-info {
