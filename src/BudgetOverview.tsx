@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './hooks/firebase';
 import Modal from './components/Modal';
 import { useHolidays, isHoliday, isWeekend, getAPIKeyStatus, truncateHolidayName } from './hooks/useHolidays';
@@ -49,8 +49,8 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   });
 
   // 카테고리 옵션
-  const expenseCategories = ['생활비', '식비', '교통비', '의료비', '교육비', '문화/여가', '기타'];
-  const incomeCategories = ['급여', '용돈', '보너스', '투자수익', '기타'];
+  //const expenseCategories = ['생활비', '식비', '교통비', '의료비', '교육비', '문화/여가', '기타'];
+  //const incomeCategories = ['급여', '용돈', '보너스', '투자수익', '기타'];
 
   // API 키 상태 가져오기
   const apiKeyStatus = getAPIKeyStatus();
@@ -217,10 +217,10 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   };
 
   // 오늘 날짜 설정
-  const setToday = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setFormData({ ...formData, date: today });
-  };
+  //const setToday = () => {
+  //  const today = new Date().toISOString().split('T')[0];
+  //  setFormData({ ...formData, date: today });
+  //};
 
   // 공휴일 상태 메시지 생성
   const getHolidayStatusMessage = () => {
