@@ -192,6 +192,63 @@
   margin-bottom: var(--spacing-xs);
 }
 
+.stat-card {
+  background: rgba(51, 65, 85, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  box-shadow: var(--shadow-dark-md);
+  transition: all var(--transition-normal);
+}
+
+.budget-overview.light .stat-card {
+  background: rgba(248, 250, 252, 0.8);
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-dark-lg);
+}
+
+.budget-overview.light .stat-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  font-weight: var(--font-semibold);
+  opacity: 0.7;
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-amount {
+  font-size: 1.8rem;
+  font-weight: var(--font-bold);
+  margin: 0;
+}
+
+.stat-card.income .stat-amount {
+  color: var(--success-color);
+}
+
+.stat-card.expense .stat-amount {
+  color: var(--error-color);
+}
+
+.stat-card.balance.positive .stat-amount {
+  color: var(--success-color);
+}
+
+.stat-card.balance.negative .stat-amount {
+  color: var(--error-color);
+}
+
 /* 캘린더 컨테이너 */
 .calendar-container {
   background: rgba(51, 65, 85, 0.5);
@@ -285,6 +342,38 @@
   flex-shrink: 0;
 }
 
+/* 공휴일/일요일 날짜 숫자 스타일 - 먼저 선언하여 우선순위 확보 */
+.day-number.holiday-date,
+.day-number.sunday-date {
+  color: var(--error-color); /* #ef4444 - 지출과 동일한 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+/* 라이트모드에서 공휴일/일요일 스타일 - 더 높은 specificity로 확실하게 적용 */
+.budget-overview.light .day-number.holiday-date,
+.budget-overview.light .day-number.sunday-date {
+  color: var(--error-color); /* #ef4444 - 라이트모드에서도 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+/* 다크모드에서 공휴일/일요일 스타일 */
+.budget-overview.dark .day-number.holiday-date,
+.budget-overview.dark .day-number.sunday-date {
+  color: var(--error-color); /* #ef4444 - 다크모드에서도 동일한 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+/* 토요일 스타일 */
+.day-number.saturday-date {
+  color: #3b82f6;
+  font-weight: var(--font-bold);
+}
+
+.budget-overview.dark .day-number.saturday-date {
+  color: #93c5fd;
+}
+
+/* 일반 day-number 스타일은 휴일 스타일 다음에 선언 */
 .budget-overview.light .day-number {
   color: var(--text-light);
 }
@@ -292,19 +381,6 @@
 .calendar-day.today .day-number {
   color: var(--secondary-color);
   font-weight: var(--font-bold);
-}
-
-/* 공휴일/일요일 날짜 숫자 스타일 - 지출 색상(#ef4444)과 동일하게 설정 */
-.day-number.holiday-date,
-.day-number.sunday-date {
-  color: var(--error-color); /* #ef4444 - 지출과 동일한 빨간색 */
-  font-weight: var(--font-bold);
-}
-
-/* 다크모드에서도 지출과 동일한 빨간색 사용 (은은한 색상 제거) */
-.budget-overview.dark .day-number.holiday-date,
-.budget-overview.dark .day-number.sunday-date {
-  color: var(--error-color); /* #ef4444 - 라이트모드와 동일 */
 }
 
 /* 공휴일 이름 표시 - 숫자 옆에 축약해서 표시 */
@@ -328,6 +404,15 @@
   will-change: transform; /* GPU 가속을 위해 추가 */
 }
 
+/* 라이트모드에서 공휴일 이름 스타일 강화 */
+.budget-overview.light .holiday-name {
+  color: var(--error-color);
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  font-weight: var(--font-semibold);
+}
+
+/* 다크모드에서 공휴일 이름 스타일 */
 .budget-overview.dark .holiday-name {
   color: #fca5a5;
   background: rgba(239, 68, 68, 0.15);
@@ -504,6 +589,84 @@
   font-size: var(--text-base);
 }
 
+/* 오늘 날짜가 공휴일/일요일인 경우 - 가장 높은 specificity */
+.budget-overview.light .calendar-day.today .day-number.holiday-date,
+.budget-overview.light .calendar-day.today .day-number.sunday-date,
+.budget-overview.dark .calendar-day.today .day-number.holiday-date,
+.budget-overview.dark .calendar-day.today .day-number.sunday-date {
+  background: linear-gradient(45deg, var(--secondary-color), var(--error-color));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--error-color); /* fallback */
+  font-weight: var(--font-black);
+}
+
+/* =====================================
+   Holiday & Sunday Calendar Styles
+   ===================================== */
+
+/* 공휴일 상태 표시 */
+.holiday-status {
+  text-align: center;
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--info-color);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.holiday-status.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error-color);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 주말 표시 (요일 헤더) - specificity를 높여서 확실하게 적용 */
+.weekday.sunday {
+  color: var(--error-color); /* 일요일 - 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+.weekday.saturday {
+  color: #3b82f6; /* 토요일 - 파란색 */
+  font-weight: var(--font-bold);
+}
+
+.budget-overview.light .weekday.sunday {
+  color: var(--error-color); /* 라이트모드 일요일 - 빨간색 */
+  font-weight: var(--font-bold);
+}
+
+.budget-overview.light .weekday.saturday {
+  color: #3b82f6; /* 라이트모드 토요일 - 파란색 */
+  font-weight: var(--font-bold);
+}
+
+.budget-overview.dark .weekday.sunday {
+  color: var(--error-color); /* 다크모드 일요일 - 동일한 빨간색 */
+}
+
+.budget-overview.dark .weekday.saturday {
+  color: #93c5fd; /* 다크모드 토요일 - 밝은 파란색 */
+}
+
+/* 스크린 리더를 위한 숨겨진 텍스트 */
+.sr-only-holiday {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
   .content-wrapper {
@@ -628,14 +791,6 @@
     padding: var(--spacing-xs) 4px;
     font-size: var(--text-xs);
   }
-  
-  .stat-card {
-    padding: var(--spacing-md) var(--spacing-sm);
-  }
-  
-  .stat-amount {
-    font-size: var(--text-xl);
-  }
 
   .day-header {
     flex-direction: column;
@@ -657,87 +812,6 @@
   }
 }
 
-/* =====================================
-   Holiday & Sunday Calendar Styles
-   ===================================== */
-
-/* 공휴일 상태 표시 */
-.holiday-status {
-  text-align: center;
-  padding: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  background: rgba(59, 130, 246, 0.1);
-  color: var(--info-color);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.holiday-status.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--error-color);
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
-/* 주말 표시 (요일 헤더) */
-.weekday.sunday {
-  color: var(--error-color); /* 일요일 - 빨간색 */
-  font-weight: var(--font-bold);
-}
-
-.weekday.saturday {
-  color: #3b82f6; /* 토요일 - 파란색 */
-  font-weight: var(--font-bold);
-}
-
-.budget-overview.dark .weekday.sunday {
-  color: var(--error-color); /* 다크모드 일요일 - 동일한 빨간색 */
-}
-
-.budget-overview.dark .weekday.saturday {
-  color: #93c5fd; /* 다크모드 토요일 - 밝은 파란색 */
-}
-
-/* 오늘 날짜가 공휴일/일요일인 경우 */
-.calendar-day.today .day-number.holiday-date,
-.calendar-day.today .day-number.sunday-date {
-  background: linear-gradient(45deg, var(--secondary-color), var(--error-color));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: var(--error-color); /* fallback */
-  font-weight: var(--font-black);
-}
-
-/* 스크린 리더를 위한 숨겨진 텍스트 */
-.sr-only-holiday {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* 인쇄용 스타일 */
-@media print {
-  .day-number.holiday-date,
-  .day-number.sunday-date {
-    color: #ef4444 !important;
-    font-weight: bold !important;
-  }
-  
-  .holiday-name {
-    color: #ef4444 !important;
-    background: none !important;
-    border: 1px solid #ef4444 !important;
-  }
-}
-
 /* 접근성 개선 */
 @media (prefers-contrast: high) {
   .day-number.holiday-date,
@@ -754,5 +828,42 @@
   .dark .holiday-name {
     background: #450a0a;
     color: #fca5a5;
+  }
+}
+
+/* Loading Container */
+.budget-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  transition: all 0.3s ease;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  font-weight: 600;
+  opacity: 0.7;
+  animation: pulse 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }

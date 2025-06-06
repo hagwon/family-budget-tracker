@@ -11,7 +11,7 @@
   align-items: center;
   gap: 12px;
   backdrop-filter: blur(10px);
-  border-radius: 50px;
+  border-radius: 20px;
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -31,7 +31,7 @@
 
 .theme-toggle.fixed {
   position: fixed;
-  top: 80px;
+  top: 30px;
   right: 30px;
 }
 
@@ -41,7 +41,7 @@
 
 .theme-toggle.absolute {
   position: absolute;
-  top: 80px;
+  top: 30px;
   right: 30px;
 }
 
