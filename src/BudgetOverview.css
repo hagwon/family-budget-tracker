@@ -1,35 +1,25 @@
-/* 예산 개요 컨테이너 - Auth처럼 전체 화면 차지 */
+/* 예산 개요 컨테이너 - 스크롤 컨테이너로 설정 */
 .budget-overview-container {
-  min-height: 100vh;
+  width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  padding: var(--spacing-xl);
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-  width: 100vw;
-  margin: 0;
+  overflow-y: auto; /* 세로 스크롤만 허용 */
+  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-.budget-overview-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  z-index: 0;
-}
+/* 배경 패턴 제거 - App 컨테이너에서 이미 처리됨 */
 
 .budget-overview-container.light {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  /* 배경 그라디언트 제거 - App에서 처리 */
 }
 
 .budget-overview-container.dark {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+  /* 배경 그라디언트 제거 - App에서 처리 */
 }
 
 /* 예산 개요 메인 컨테이너 */
@@ -48,9 +38,9 @@
   animation: fadeInUp 0.8s ease;
   position: relative;
   z-index: 1;
-  max-height: 90vh;
-  overflow-y: auto;
-  overflow-x: visible; /* 툴팁이 잘리지 않도록 추가 */
+  margin: 0 auto;
+  overflow: visible; /* 툴팁이 잘리지 않도록 추가 */
+  min-height: fit-content;
 }
 
 .budget-overview.light {
@@ -167,12 +157,16 @@
   gap: var(--spacing-xl);
   align-items: flex-start;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* flex-shrink 허용 */
 }
 
 .main-content {
   flex: 1;
   min-width: 0;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  max-width: 100%;
 }
 
 /* 예산 메인 섹션 */
@@ -181,7 +175,9 @@
   flex-direction: column;
   gap: var(--spacing-xl);
   width: 100%;
+  max-width: 100%;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  min-width: 0; /* flex-shrink 허용 */
 }
 
 /* 월별 통계 */
@@ -190,6 +186,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-xs);
+  width: 100%;
+  max-width: 100%;
 }
 
 .stat-card {
@@ -258,6 +256,8 @@
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-md);
   overflow: visible; /* 툴팁이 잘리지 않도록 수정 */
+  width: 100%;
+  max-width: 100%;
 }
 
 .budget-overview.light .calendar-container {
@@ -667,6 +667,20 @@
   border: 0;
 }
 
+/* API 상태 정보 */
+.api-status-info {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(51, 65, 85, 0.3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.budget-overview.light .api-status-info {
+  background: rgba(248, 250, 252, 0.5);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
   .content-wrapper {
@@ -683,18 +697,20 @@
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .budget-overview-container {
-    padding: 16px;
+    padding: var(--spacing-md);
   }
 
   .budget-overview {
     padding: var(--spacing-lg);
     margin: 0;
-    max-height: calc(100vh - 32px);
+    max-width: 100%;
+    width: 100%;
   }
   
   .budget-header {
@@ -717,6 +733,7 @@
   
   .calendar-container {
     padding: var(--spacing-md);
+    overflow-x: hidden; /* 가로 스크롤 방지 */
   }
   
   .calendar-day {
@@ -751,17 +768,24 @@
     font-size: 0.55rem;
     padding: 1px 3px;
   }
+
+  .current-month {
+    font-size: var(--text-xl);
+    text-align: center;
+    word-break: keep-all;
+  }
 }
 
 @media (max-width: 480px) {
   .budget-overview-container {
-    padding: 12px;
+    padding: var(--spacing-sm);
   }
 
   .budget-overview {
     padding: var(--spacing-md);
     margin: 0;
-    max-height: calc(100vh - 24px);
+    max-width: 100%;
+    width: 100%;
   }
   
   .budget-header {
@@ -833,12 +857,12 @@
 
 /* Loading Container */
 .budget-loading {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  transition: all 0.3s ease;
+  padding: var(--spacing-2xl);
+  min-height: 200px;
+  width: 100%;
 }
 
 .loading-spinner {
