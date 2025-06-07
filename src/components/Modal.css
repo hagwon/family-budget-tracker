@@ -19,7 +19,8 @@
   justify-content: center;
   z-index: 2000;
   animation: fadeIn 0.3s ease;
-  padding: 16px;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 /* =====================================
@@ -30,9 +31,10 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 32px;
-  max-width: 400px;
+  padding: 24px; /* 32px에서 24px로 줄임 */
+  max-width: 500px;
   width: 100%;
+  max-height: 90vh; /* 85vh에서 90vh로 늘림 */
   text-align: center;
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.2),
@@ -41,7 +43,8 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   animation: slideUp 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal-content.dark {
@@ -59,8 +62,8 @@
    ===================================== */
 
 .modal-icon {
-  font-size: 3rem;
-  margin-bottom: 16px;
+  font-size: 2.5rem; /* 3rem에서 2.5rem로 줄임 */
+  margin-bottom: 12px; /* 16px에서 12px로 줄임 */
   display: block;
   font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', system-ui, -apple-system, sans-serif;
   line-height: 1;
@@ -69,7 +72,7 @@
 .modal-title {
   font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 8px; /* 12px에서 8px로 줄임 */
   color: #374151;
   line-height: 1.3;
 }
@@ -113,7 +116,7 @@
 
 .modal-message {
   font-size: 1rem;
-  margin-bottom: 24px;
+  margin-bottom: 16px; /* 24px에서 16px로 줄임 */
   opacity: 0.8;
   line-height: 1.5;
   color: #64748b;
@@ -301,13 +304,45 @@
    Special Modal Form Components
    ===================================== */
 
+/* 모달 폼 스크롤바 스타일링 */
+.modal-form::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modal-form::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.modal-form::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 4px;
+}
+
+.modal-form::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.7);
+}
+
+.modal-content.dark .modal-form::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+.modal-content.dark .modal-form::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
+
+/* 스크롤 영역에 여백 추가 */
 .modal-form {
   text-align: left;
-  margin: 24px 0;
+  margin: 16px 0; /* 24px에서 16px로 줄임 */
+  max-height: 65vh; /* 60vh에서 65vh로 늘림 */
+  overflow-y: auto;
+  padding-right: 8px;
+  margin-right: -8px; /* 스크롤바 공간 확보 */
 }
 
 .modal-form .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 12px; /* 16px에서 12px로 줄임 */
 }
 
 .modal-form .form-group:last-child {
@@ -319,7 +354,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   color: #374151;
-  margin-bottom: 8px;
+  margin-bottom: 6px; /* 8px에서 6px로 줄임 */
 }
 
 .modal-content.dark .modal-form label {
@@ -330,7 +365,7 @@
 .modal-form select,
 .modal-form textarea {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 14px; /* 12px 16px에서 줄임 */
   border: 2px solid transparent;
   border-radius: 12px;
   font-size: 0.95rem;
@@ -375,7 +410,7 @@
 
 .modal-form textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 60px; /* 80px에서 60px로 줄임 */
 }
 
 /* =====================================
@@ -408,70 +443,111 @@
 
 @media (max-width: 600px) {
   .modal-overlay {
-    padding: 16px;
+    padding: 12px;
+    align-items: flex-start;
+    padding-top: 20px;
   }
 
   .modal-content {
-    padding: 24px 20px;
+    padding: 16px 14px; /* 20px 16px에서 줄임 */
     margin: 0;
     max-width: none;
-    width: calc(100% - 32px);
-    max-height: calc(100vh - 32px);
+    width: calc(100% - 24px);
+    max-height: calc(100vh - 40px);
+    min-height: auto;
     overflow-y: auto;
   }
 
+  .modal-form {
+    max-height: calc(100vh - 180px); /* 200px에서 180px로 줄임 */
+    margin: 12px 0; /* 16px에서 12px로 줄임 */
+  }
+
+  .modal-form .form-group {
+    margin-bottom: 10px; /* 12px에서 10px로 줄임 */
+  }
+
   .modal-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
+    font-size: 2rem; /* 2.2rem에서 2rem로 줄임 */
+    margin-bottom: 8px; /* 10px에서 8px로 줄임 */
   }
 
   .modal-title {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 6px; /* 8px에서 6px로 줄임 */
   }
 
   .modal-message {
-    font-size: 0.95rem;
-    margin-bottom: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 12px; /* 16px에서 12px로 줄임 */
     line-height: 1.4;
   }
 
   .modal-buttons {
     flex-direction: column;
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 8px; /* 12px에서 8px로 줄임 */
   }
 
   .modal-button {
     width: 100%;
-    padding: 14px 20px;
-    font-size: 0.95rem;
+    padding: 12px 16px;
+    font-size: 0.9rem;
   }
 
   .modal-form input,
   .modal-form select,
   .modal-form textarea {
     font-size: 16px; /* iOS 줌 방지 */
-    padding: 14px 16px;
+    padding: 10px 12px; /* 12px 14px에서 줄임 */
+  }
+
+  .modal-form label {
+    font-size: 0.85rem;
+    margin-bottom: 4px; /* 6px에서 4px로 줄임 */
   }
 }
 
 @media (max-width: 360px) {
   .modal-content {
-    padding: 20px 16px;
-    width: calc(100% - 24px);
+    padding: 14px 10px; /* 16px 12px에서 줄임 */
+    width: calc(100% - 16px);
+  }
+
+  .modal-form {
+    max-height: calc(100vh - 160px); /* 180px에서 160px로 줄임 */
+    margin: 8px 0; /* 12px에서 8px로 줄임 */
+  }
+
+  .modal-form .form-group {
+    margin-bottom: 8px; /* 10px에서 8px로 줄임 */
   }
 
   .modal-icon {
-    font-size: 2rem;
+    font-size: 1.8rem; /* 2rem에서 1.8rem로 줄임 */
+    margin-bottom: 6px; /* 8px에서 6px로 줄임 */
   }
 
   .modal-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin-bottom: 4px; /* 6px에서 4px로 줄임 */
   }
 
   .modal-message {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    margin-bottom: 10px; /* 12px에서 10px로 줄임 */
+  }
+
+  .modal-form input,
+  .modal-form select,
+  .modal-form textarea {
+    padding: 8px 10px; /* 10px 12px에서 줄임 */
+    font-size: 16px;
+  }
+
+  .modal-form label {
+    font-size: 0.8rem;
+    margin-bottom: 3px; /* 4px에서 3px로 줄임 */
   }
 }
 

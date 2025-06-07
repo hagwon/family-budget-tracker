@@ -1,0 +1,965 @@
+/* =========================================
+   Fixed Expense Manager - 고정비 관리 스타일
+   ========================================= */
+
+/* =====================================
+   Main Manager Container
+   ===================================== */
+
+.fixed-expense-manager {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  max-width: 900px;
+  width: 90vw;
+  max-height: 85vh;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.1),
+    0 8px 25px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+}
+
+.fixed-expense-manager.dark {
+  background: rgba(30, 41, 59, 0.95);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* =====================================
+   Manager Header
+   ===================================== */
+
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  flex-shrink: 0;
+}
+
+.fixed-expense-manager.dark .manager-header {
+  border-bottom-color: rgba(71, 85, 105, 0.3);
+}
+
+.manager-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #334155;
+}
+
+.fixed-expense-manager.dark .manager-title {
+  color: #f8fafc;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  color: #64748b;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
+.fixed-expense-manager.dark .close-button {
+  color: #94a3b8;
+}
+
+/* =====================================
+   Month Status Section
+   ===================================== */
+
+.month-status {
+  padding: 24px 32px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  flex-shrink: 0;
+}
+
+.fixed-expense-manager.dark .month-status {
+  border-bottom-color: rgba(71, 85, 105, 0.3);
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.status-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  color: #475569;
+}
+
+.fixed-expense-manager.dark .status-header h3 {
+  color: #e2e8f0;
+}
+
+.generate-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.generate-button:hover {
+  background: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.generate-button.disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.generate-button.disabled:hover {
+  background: #9ca3af;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Status Grid */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.status-card {
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  transition: all 0.3s ease;
+}
+
+.fixed-expense-manager.dark .status-card {
+  background: rgba(51, 65, 85, 0.6);
+  border-color: rgba(71, 85, 105, 0.4);
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-expense-manager.dark .status-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.status-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .status-label {
+  color: #94a3b8;
+}
+
+.status-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.fixed-expense-manager.dark .status-value {
+  color: #f8fafc;
+}
+
+.status-value.success {
+  color: #10b981;
+}
+
+.status-value.warning {
+  color: #f59e0b;
+}
+
+/* Monthly Projection */
+.monthly-projection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.fixed-expense-manager.dark .monthly-projection {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.projection-item {
+  text-align: center;
+}
+
+.projection-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .projection-label {
+  color: #94a3b8;
+}
+
+.projection-amount {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.projection-item.income .projection-amount {
+  color: #10b981;
+}
+
+.projection-item.expense .projection-amount {
+  color: #ef4444;
+}
+
+.projection-item.balance.positive .projection-amount {
+  color: #10b981;
+}
+
+.projection-item.balance.negative .projection-amount {
+  color: #ef4444;
+}
+
+/* =====================================
+   Expenses Section
+   ===================================== */
+
+.expenses-section {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #475569;
+}
+
+.fixed-expense-manager.dark .section-header h3 {
+  color: #e2e8f0;
+}
+
+.add-button {
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #8b5cf6;
+}
+
+.add-button:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+  transform: translateY(-2px);
+}
+
+.add-button.primary {
+  background: #8b5cf6;
+  color: white;
+  border-color: #8b5cf6;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.add-button.primary:hover {
+  background: #7c3aed;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* =====================================
+   Loading, Error, Empty States
+   ===================================== */
+
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-spinner {
+  font-size: 1rem;
+  color: #64748b;
+  animation: pulse 2s infinite;
+}
+
+.fixed-expense-manager.dark .loading-spinner {
+  color: #94a3b8;
+}
+
+.error-message {
+  color: #ef4444;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.retry-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.empty-state {
+  background: rgba(248, 250, 252, 0.5);
+  border-radius: 16px;
+  border: 2px dashed rgba(203, 213, 225, 0.8);
+}
+
+.fixed-expense-manager.dark .empty-state {
+  background: rgba(51, 65, 85, 0.3);
+  border-color: rgba(71, 85, 105, 0.6);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  color: #475569;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.fixed-expense-manager.dark .empty-state h4 {
+  color: #e2e8f0;
+}
+
+.empty-state p {
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.fixed-expense-manager.dark .empty-state p {
+  color: #94a3b8;
+}
+
+/* =====================================
+   Expenses List
+   ===================================== */
+
+.expenses-list {
+  display: grid;
+  gap: 16px;
+}
+
+/* =====================================
+   Fixed Expense Card
+   ===================================== */
+
+.fixed-expense-card {
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.fixed-expense-manager.dark .fixed-expense-card {
+  background: rgba(51, 65, 85, 0.6);
+  border-color: rgba(71, 85, 105, 0.4);
+}
+
+.fixed-expense-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-expense-manager.dark .fixed-expense-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-expense-card.inactive {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.fixed-expense-card.expired {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.expense-info {
+  flex: 1;
+}
+
+.expense-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #334155;
+}
+
+.fixed-expense-manager.dark .expense-name {
+  color: #f8fafc;
+}
+
+.expense-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.category {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .category {
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+}
+
+.schedule {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .schedule {
+  color: #94a3b8;
+}
+
+/* Status Badges */
+.status-badges {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.inactive {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.status-badge.expired {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.type-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.type-badge.income {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.type-badge.expense {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Amount Section */
+.amount-section {
+  margin-bottom: 16px;
+}
+
+.amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Consolas', 'Monaco', monospace;
+  margin-bottom: 4px;
+}
+
+.amount.income {
+  color: #10b981;
+}
+
+.amount.expense {
+  color: #ef4444;
+}
+
+.next-generation {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .next-generation {
+  color: #94a3b8;
+}
+
+/* Period Section */
+.period-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+}
+
+.period-info {
+  display: flex;
+  gap: 8px;
+}
+
+.period-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .period-label {
+  color: #94a3b8;
+}
+
+.period-date {
+  color: #334155;
+  font-weight: 600;
+}
+
+.fixed-expense-manager.dark .period-date {
+  color: #f8fafc;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.action-button {
+  flex: 1;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.fixed-expense-manager.dark .action-button {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.4);
+  color: #e2e8f0;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-button.toggle.pause {
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+
+.action-button.toggle.pause:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.action-button.toggle.resume {
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.action-button.toggle.resume:hover {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.action-button.edit {
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.action-button.edit:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.action-button.delete {
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.action-button.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Last Generated */
+.last-generated {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding-top: 12px;
+  border-top: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.fixed-expense-manager.dark .last-generated {
+  border-top-color: rgba(71, 85, 105, 0.3);
+}
+
+.last-generated-label {
+  color: #64748b;
+}
+
+.fixed-expense-manager.dark .last-generated-label {
+  color: #94a3b8;
+}
+
+.last-generated-date {
+  color: #334155;
+  font-weight: 600;
+}
+
+.fixed-expense-manager.dark .last-generated-date {
+  color: #f8fafc;
+}
+
+/* =====================================
+   Form Styles (추가 스타일) - 간격 조정
+   ===================================== */
+
+.form-errors {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 8px; /* 12px에서 8px로 줄임 */
+  margin-bottom: 12px; /* 20px에서 12px로 줄임 */
+}
+
+.form-errors .error-message {
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-bottom: 3px; /* 4px에서 3px로 줄임 */
+}
+
+.form-errors .error-message:last-child {
+  margin-bottom: 0;
+}
+
+.template-toggle-button {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  padding: 8px 14px; /* 10px 16px에서 줄임 */
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #8b5cf6;
+  font-weight: 500;
+}
+
+.template-toggle-button:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.template-list {
+  margin-top: 8px; /* 12px에서 8px로 줄임 */
+  border: 1px solid rgba(203, 213, 225, 0.5);
+  border-radius: 8px;
+  max-height: 140px; /* 200px에서 140px로 줄임 */
+  overflow-y: auto;
+}
+
+.template-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px; /* 12px 16px에서 줄임 */
+  border: none;
+  background: none;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+}
+
+.template-item:hover {
+  background: rgba(248, 250, 252, 0.8);
+}
+
+.template-item:last-child {
+  border-bottom: none;
+}
+
+.template-name {
+  font-weight: 600;
+  color: #334155;
+}
+
+.template-category {
+  font-size: 0.8rem;
+  color: #64748b;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.template-day {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.type-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.type-button {
+  flex: 1;
+  padding: 10px; /* 12px에서 10px로 줄임 */
+  border: 2px solid rgba(203, 213, 225, 0.5);
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.type-button:hover {
+  border-color: rgba(102, 126, 234, 0.3);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.type-button.active {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 3px; /* 4px에서 3px로 줄임 */
+  display: block;
+}
+
+.fixed-expense-manager.dark .form-hint {
+  color: #94a3b8;
+}
+
+/* =====================================
+   Mobile Responsive
+   ===================================== */
+
+@media (max-width: 768px) {
+  .fixed-expense-manager {
+    width: 95vw;
+    max-height: 90vh;
+    min-height: 70vh;
+    margin: 0;
+  }
+
+  .manager-header,
+  .month-status,
+  .expenses-section {
+    padding: 16px 20px;
+  }
+
+  .status-grid,
+  .monthly-projection {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .status-badges {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .period-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .status-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .template-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px; /* 8px에서 6px로 줄임 */
+  }
+}
+
+@media (max-width: 480px) {
+  .fixed-expense-manager {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    max-height: none;
+    min-height: 100vh;
+  }
+
+  .manager-header,
+  .month-status,
+  .expenses-section {
+    padding: 12px 16px;
+  }
+
+  .manager-title {
+    font-size: 1.3rem;
+  }
+
+  .amount {
+    font-size: 1.3rem;
+  }
+}
+
+/* =====================================
+   Animations
+   ===================================== */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* =====================================
+   Accessibility
+   ===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .fixed-expense-manager,
+  .fixed-expense-card,
+  .action-button,
+  .add-button,
+  .generate-button {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .fixed-expense-card:hover,
+  .action-button:hover,
+  .add-button:hover,
+  .generate-button:hover {
+    transform: none !important;
+  }
+}
