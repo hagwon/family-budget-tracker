@@ -1,35 +1,15 @@
-/* 예산 개요 컨테이너 - Auth처럼 전체 화면 차지 */
+/* 예산 개요 컨테이너 - 스크롤 컨테이너로 설정 */
 .budget-overview-container {
-  min-height: 100vh;
+  width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  padding: var(--spacing-md); /* xl에서 md로 줄임 */
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-  width: 100vw;
-  margin: 0;
-}
-
-.budget-overview-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  z-index: 0;
-}
-
-.budget-overview-container.light {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-}
-
-.budget-overview-container.dark {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+  overflow-y: auto; /* 세로 스크롤만 허용 */
+  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 /* 예산 개요 메인 컨테이너 */
@@ -37,20 +17,20 @@
   background: transparent;
   color: var(--text-dark);
   transition: all var(--transition-normal);
-  max-width: 1400px;
+  max-width: 1300px; /* 1400px에서 1300px로 줄임 */
   width: 100%;
   background: var(--card-bg-dark);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* xl에서 lg로 줄임 */
   border: 1px solid var(--border-dark);
   box-shadow: var(--shadow-dark-xl), var(--shadow-dark-lg);
   animation: fadeInUp 0.8s ease;
   position: relative;
   z-index: 1;
-  max-height: 90vh;
-  overflow-y: auto;
-  overflow-x: visible; /* 툴팁이 잘리지 않도록 추가 */
+  margin: 0 auto;
+  overflow: visible; /* 툴팁이 잘리지 않도록 추가 */
+  min-height: fit-content;
 }
 
 .budget-overview.light {
@@ -65,11 +45,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-xl) var(--spacing-2xl);
+  padding: var(--spacing-lg) var(--spacing-xl); /* 상하 패딩 줄임 */
   background: rgba(51, 65, 85, 0.5);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-lg);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg); /* xl에서 lg로 줄임 */
   border: 1px solid rgba(71, 85, 105, 0.3);
   box-shadow: var(--shadow-dark-md);
 }
@@ -164,24 +144,31 @@
 /* 콘텐츠 래퍼 */
 .content-wrapper {
   display: flex;
-  gap: var(--spacing-xl);
-  align-items: flex-start;
+  gap: var(--spacing-lg); /* xl에서 lg로 줄임 */
+  align-items: stretch; /* 같은 높이로 맞춤 */
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* flex-shrink 허용 */
 }
 
 .main-content {
   flex: 1;
   min-width: 0;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  max-width: 100%;
 }
 
 /* 예산 메인 섹션 */
 .budget-main-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-lg); /* xl에서 lg로 줄임 */
   width: 100%;
+  max-width: 100%;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  min-width: 0; /* flex-shrink 허용 */
+  height: 100%; /* 전체 높이 사용 */
 }
 
 /* 월별 통계 */
@@ -189,14 +176,16 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 0; /* xs를 0으로 변경 */
+  width: 100%;
+  max-width: 100%;
 }
 
 .stat-card {
   background: rgba(51, 65, 85, 0.5);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* xl에서 lg로 줄임 */
   text-align: center;
   border: 1px solid rgba(71, 85, 105, 0.3);
   box-shadow: var(--shadow-dark-md);
@@ -253,11 +242,17 @@
 .calendar-container {
   background: rgba(51, 65, 85, 0.5);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* xl에서 lg로 줄임 */
   border: 1px solid rgba(71, 85, 105, 0.3);
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-md);
   overflow: visible; /* 툴팁이 잘리지 않도록 수정 */
+  width: 100%;
+  max-width: 100%;
+  flex: 1; /* 남은 공간을 채움 */
+  display: flex;
+  flex-direction: column;
+  min-height: 400px; /* 450px에서 400px로 줄임 */
 }
 
 .budget-overview.light .calendar-container {
@@ -270,7 +265,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm); /* md에서 sm으로 줄임 */
 }
 
 .weekday {
@@ -287,12 +282,15 @@
 .calendar-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr); /* 6주 고정 높이 */
   gap: 2px;
   overflow: visible; /* 툴팁이 잘리지 않도록 설정 */
+  flex: 1; /* 남은 공간을 채움 */
+  min-height: 300px; /* 캘린더 바디 최소 높이 추가 */
 }
 
 .calendar-day {
-  min-height: 80px;
+  height: 100%; /* grid cell을 완전히 채움 */
   padding: var(--spacing-xs);
   border-radius: var(--radius-md);
   background: rgba(51, 65, 85, 0.5);
@@ -503,13 +501,13 @@
   flex-shrink: 0;
   background: rgba(51, 65, 85, 0.5);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg); /* xl에서 lg로 줄임 */
   border: 1px solid rgba(71, 85, 105, 0.3);
   backdrop-filter: blur(20px);
   box-shadow: var(--shadow-dark-md);
-  height: fit-content;
-  position: sticky;
-  top: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  min-height: 400px; /* 캘린더와 동일하게 줄임 */
 }
 
 .budget-overview.light .monthly-summary {
@@ -521,7 +519,7 @@
 .summary-title {
   font-size: var(--text-xl);
   font-weight: var(--font-bold);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md); /* lg에서 md로 줄임 */
   color: var(--text-dark);
   display: flex;
   align-items: center;
@@ -530,6 +528,13 @@
 
 .budget-overview.light .summary-title {
   color: var(--text-light);
+}
+
+.summary-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: var(--spacing-md); /* lg에서 md로 줄임 */
+  min-height: 0;
 }
 
 .summary-table {
@@ -606,25 +611,6 @@
    Holiday & Sunday Calendar Styles
    ===================================== */
 
-/* 공휴일 상태 표시 */
-.holiday-status {
-  text-align: center;
-  padding: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  background: rgba(59, 130, 246, 0.1);
-  color: var(--info-color);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.holiday-status.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--error-color);
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
 /* 주말 표시 (요일 헤더) - specificity를 높여서 확실하게 적용 */
 .weekday.sunday {
   color: var(--error-color); /* 일요일 - 빨간색 */
@@ -667,34 +653,62 @@
   border: 0;
 }
 
+/* API 상태 정보 */
+.api-status-info {
+  margin-top: auto; /* 하단에 고정 */
+  padding: var(--spacing-md);
+  background: rgba(51, 65, 85, 0.3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.budget-overview.light .api-status-info {
+  background: rgba(248, 250, 252, 0.5);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
   .content-wrapper {
     flex-direction: column;
     gap: var(--spacing-lg);
+    align-items: stretch; /* 세로 정렬에서도 전체 너비 사용 */
   }
   
   .monthly-summary {
     width: 100%;
-    position: static;
+    height: auto; /* 모바일에서는 자동 높이 */
+    min-height: auto; /* 모바일에서는 최소 높이 제거 */
   }
   
+  .summary-table-wrapper {
+    flex: none; /* 모바일에서는 flex 제거 */
+    margin-bottom: var(--spacing-md);
+    overflow-y: visible; /* 모바일에서는 스크롤 없음 */
+  }
+
   .summary-table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .api-status-info {
+    margin-top: var(--spacing-md); /* 모바일에서는 일반 마진 */
   }
 }
 
 @media (max-width: 768px) {
   .budget-overview-container {
-    padding: 16px;
+    padding: var(--spacing-md);
   }
 
   .budget-overview {
     padding: var(--spacing-lg);
     margin: 0;
-    max-height: calc(100vh - 32px);
+    max-width: 100%;
+    width: 100%;
   }
   
   .budget-header {
@@ -717,6 +731,17 @@
   
   .calendar-container {
     padding: var(--spacing-md);
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+    flex: none; /* 모바일에서는 flex 제거 */
+    min-height: auto; /* 모바일에서는 최소 높이 제거 */
+  }
+
+  .calendar-body {
+    flex: none; /* 모바일에서는 flex 제거 */
+  }
+
+  .budget-main-section {
+    height: auto; /* 모바일에서는 자동 높이 */
   }
   
   .calendar-day {
@@ -751,17 +776,24 @@
     font-size: 0.55rem;
     padding: 1px 3px;
   }
+
+  .current-month {
+    font-size: var(--text-xl);
+    text-align: center;
+    word-break: keep-all;
+  }
 }
 
 @media (max-width: 480px) {
   .budget-overview-container {
-    padding: 12px;
+    padding: var(--spacing-sm);
   }
 
   .budget-overview {
     padding: var(--spacing-md);
     margin: 0;
-    max-height: calc(100vh - 24px);
+    max-width: 100%;
+    width: 100%;
   }
   
   .budget-header {
@@ -780,6 +812,20 @@
   
   .calendar-container {
     padding: var(--spacing-sm);
+    flex: none; /* 모바일에서는 flex 제거 */
+    min-height: auto; /* 모바일에서는 최소 높이 제거 */
+  }
+
+  .calendar-body {
+    flex: none; /* 모바일에서는 flex 제거 */
+  }
+
+  .budget-main-section {
+    height: auto; /* 모바일에서는 자동 높이 */
+  }
+
+  .api-status-info {
+    margin-top: var(--spacing-md); /* 모바일에서는 일반 마진 */
   }
   
   .calendar-day {
@@ -808,7 +854,7 @@
 /* 데스크탑 대형 화면 최적화 */
 @media (min-width: 1400px) {
   .monthly-summary {
-    width: 380px;
+    width: 360px; /* 380px에서 360px로 줄임 */
   }
 }
 
@@ -833,12 +879,12 @@
 
 /* Loading Container */
 .budget-loading {
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  transition: all 0.3s ease;
+  padding: var(--spacing-2xl);
+  min-height: 200px;
+  width: 100%;
 }
 
 .loading-spinner {

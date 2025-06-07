@@ -26,13 +26,13 @@
 }
 
 /* =====================================
-   Position Variants
+   Position Variants - 실용적인 위치로 최적화
    ===================================== */
 
 .theme-toggle.fixed {
   position: fixed;
-  top: 30px;
-  right: 30px;
+  bottom: 30px; /* 하단으로 이동 */
+  left: 30px;   /* 왼쪽으로 이동 */
 }
 
 .theme-toggle.relative {
@@ -235,13 +235,13 @@
 }
 
 /* =====================================
-   Mobile Responsive
+   Mobile Responsive - 모바일 최적화
    ===================================== */
 
 @media (max-width: 768px) {
   .theme-toggle.fixed {
-    top: 16px;
-    right: 16px;
+    bottom: 16px; /* 모바일에서는 더 가까이 */
+    left: 16px;
   }
   
   .theme-toggle {
@@ -278,8 +278,8 @@
 
 @media (max-width: 480px) {
   .theme-toggle.fixed {
-    top: 12px;
-    right: 12px;
+    bottom: 12px; /* 작은 모바일에서는 더 가까이 */
+    left: 12px;
   }
 
   .theme-toggle {

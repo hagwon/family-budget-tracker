@@ -2,19 +2,11 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './hooks/firebase';
 import Modal from './components/Modal';
-import { useHolidays, isHoliday, isWeekend, getAPIKeyStatus, truncateHolidayName } from './hooks/useHolidays';
-import { formatCurrency, getMonthRange, getHolidayStatusMessage } from './utils/budgetUtils';
+import { useHolidays, isHoliday, isWeekend, truncateHolidayName } from './hooks/useHolidays';
+import { formatCurrency, getMonthRange } from './utils/budgetUtils';
+import type { BudgetItem } from './types';
+import FixedExpenseManager from './components/FixedExpenseManager';
 import './BudgetOverview.css';
-
-interface BudgetItem {
-  id: string;
-  date: string;
-  category: string;
-  description: string;
-  amount: number;
-  type: 'income' | 'expense';
-  createdAt: Date;
-}
 
 interface BudgetOverviewProps {
   isDarkMode: boolean;
@@ -29,6 +21,7 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<BudgetItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showFixedExpenseManager, setShowFixedExpenseManager] = useState(false);
   
   const { 
     holidays, 
@@ -45,8 +38,6 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
     amount: '',
     type: 'expense' as 'income' | 'expense'
   });
-
-  const apiKeyStatus = getAPIKeyStatus();
 
   // 캘린더 날짜 배열 생성
   const generateCalendarDays = () => {
@@ -182,7 +173,6 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
   const monthlyStats = getMonthlyStats();
   const monthlySummary = getMonthlyCategorySummary();
   const calendarDays = generateCalendarDays();
-  const holidayStatus = getHolidayStatusMessage(holidaysLoading, holidaysError, dataSource, holidays.length, isAPIConfigured);
 
   if (loading) {
     return (
@@ -198,13 +188,13 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
         {/* 헤더 */}
         <div className="budget-header">
           <div className="month-navigation">
-            <button onClick={() => changeMonth(-1)} className="btn btn-outline btn-sm">
+            <button onClick={() => changeMonth(-1)} className="nav-button">
               ◀
             </button>
             <h2 className="current-month">
               {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월 종합 가계부
             </h2>
-            <button onClick={() => changeMonth(1)} className="btn btn-outline btn-sm">
+            <button onClick={() => changeMonth(1)} className="nav-button">
               ▶
             </button>
           </div>
@@ -212,31 +202,17 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
           <div className="action-buttons">
             <button 
               onClick={() => setShowAddModal(true)} 
-              className="btn btn-outline btn-sm"
+              className="add-button"
             >
               생활비 가계부 보기
             </button>
             <button 
-              onClick={() => setShowAddModal(true)} 
-              className="btn btn-primary btn-sm"
+              onClick={() => setShowFixedExpenseManager(true)}
+              className="add-button primary"
             >
               고정비 관리
             </button>
           </div>
-        </div>
-
-        {/* 공휴일 상태 표시 */}
-        <div className={`holiday-status ${holidayStatus.type}`}>
-          {holidayStatus.type === 'success' && '✅ '}
-          {holidayStatus.type === 'error' && '❌ '}
-          {holidayStatus.type === 'info' && 'ℹ️ '}
-          {holidayStatus.type === 'loading' && '⏳ '}
-          {holidayStatus.message}
-          {!isAPIConfigured && (
-            <div style={{ fontSize: '0.8rem', marginTop: '4px', opacity: 0.8 }}>
-              {apiKeyStatus.instruction}
-            </div>
-          )}
         </div>
 
         {/* 메인 콘텐츠 */}
@@ -344,44 +320,46 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
               📊 월별 정산
             </h3>
             
-            <table className="summary-table">
-              <thead>
-                <tr>
-                  <th>카테고리</th>
-                  <th>금액</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monthlySummary.categoryTotals.map(({ category, amount }) => (
-                  <tr key={category}>
-                    <td className="category-name">{category}</td>
+            <div className="summary-table-wrapper">
+              <table className="summary-table">
+                <thead>
+                  <tr>
+                    <th>카테고리</th>
+                    <th>금액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthlySummary.categoryTotals.map(({ category, amount }) => (
+                    <tr key={category}>
+                      <td className="category-name">{category}</td>
+                      <td className="amount-cell expense">
+                        {amount > 0 ? `-${formatCurrency(amount)}` : '0원'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="summary-total">
+                    <td className="total-label">총 지출</td>
                     <td className="amount-cell expense">
-                      {amount > 0 ? `-${formatCurrency(amount)}` : '0원'}
+                      -{formatCurrency(monthlySummary.totalExpense)}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="summary-total">
-                  <td className="total-label">총 지출</td>
-                  <td className="amount-cell expense">
-                    -{formatCurrency(monthlySummary.totalExpense)}
-                  </td>
-                </tr>
-                <tr className="summary-total">
-                  <td className="total-label">총 수입</td>
-                  <td className="amount-cell income">
-                    +{formatCurrency(monthlySummary.totalIncome)}
-                  </td>
-                </tr>
-                <tr className="summary-total">
-                  <td className="total-label">잔액</td>
-                  <td className={`amount-cell ${monthlySummary.balance >= 0 ? 'positive' : 'negative'}`}>
-                    {monthlySummary.balance >= 0 ? '+' : ''}{formatCurrency(monthlySummary.balance)}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+                  <tr className="summary-total">
+                    <td className="total-label">총 수입</td>
+                    <td className="amount-cell income">
+                      +{formatCurrency(monthlySummary.totalIncome)}
+                    </td>
+                  </tr>
+                  <tr className="summary-total">
+                    <td className="total-label">잔액</td>
+                    <td className={`amount-cell ${monthlySummary.balance >= 0 ? 'positive' : 'negative'}`}>
+                      {monthlySummary.balance >= 0 ? '+' : ''}{formatCurrency(monthlySummary.balance)}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
             
             {/* API 상태 정보 */}
             <div className="api-status-info">
@@ -432,6 +410,14 @@ const BudgetOverview = ({ isDarkMode }: BudgetOverviewProps) => {
           confirmText="삭제"
           onConfirm={handleDeleteTransaction}
           cancelText="취소"
+        />
+
+        {/* 고정비 관리자 */}
+        <FixedExpenseManager
+          isOpen={showFixedExpenseManager}
+          onClose={() => setShowFixedExpenseManager(false)}
+          isDarkMode={isDarkMode}
+          currentMonth={currentDate}
         />
       </div>
     </div>
